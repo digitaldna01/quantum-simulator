@@ -213,6 +213,7 @@ pyrightconfig.json
 # End of https://www.toptal.com/developers/gitignore/api/python,julia,jupyternotebooks
 
 # image files
-initialied_circuit.png
+initialized_circuit.png
 oracle_circuit.png
 diffuser_circuit.png
+histogram.png
