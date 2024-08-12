@@ -120,7 +120,7 @@ docs/_build/
 target/
 
 # Jupyter Notebook
-
+visualizer.ipynb
 # IPython
 
 # pyenv
@@ -211,3 +211,8 @@ poetry.toml
 pyrightconfig.json
 
 # End of https://www.toptal.com/developers/gitignore/api/python,julia,jupyternotebooks
+
+# image files
+initialied_circuit.png
+oracle_circuit.png
+diffuser_circuit.png
