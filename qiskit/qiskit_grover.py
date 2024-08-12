@@ -1,6 +1,7 @@
 from qiskit import QuantumCircuit, transpile
 import qiskit_aer as Aer
 from qiskit_aer import StatevectorSimulator
+from qiskit.quantum_info import Statevector, DensityMatrix
 from qiskit.visualization import plot_histogram, plot_state_city
 
 import matplotlib.pyplot as plt 
@@ -88,7 +89,8 @@ for qubit in range(number_of_qubits):
 #     qc.x(qubit)
 #     qc.h(qubit)
 ##########################################
-
+state = DensityMatrix(qc)
+plot_state_city(state, color=['midnightblue', 'crimson'], title="New State City").savefig('qiskit/state_city.png')  
 # Measure all qubits
 qc.measure_all()
 
@@ -99,7 +101,7 @@ transpiled_qc.draw(output='mpl', filename='qiskit/diffuser_circuit.png')
 ### Run simulation on Statevector backend
 statevector_sim = Aer.StatevectorSimulator()
 qsam_sim = Aer.QasmSimulator()
-aer_sim = Aer.AerSimulator(method='statevector')
+aer_sim = Aer.AerSimulator(method='density_matrix')
 
 transpiled_grover_circuit = transpile(qc, aer_sim)
 results = aer_sim.run(transpiled_grover_circuit).result()
