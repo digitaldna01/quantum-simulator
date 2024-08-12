@@ -23,7 +23,7 @@ for qubit in range(3):
 # Apply a barrier for visual separation
 qc.barrier()
 transpiled_qc = transpile(qc)
-transpiled_qc.draw(output='mpl', filename='qiskit/initialized_circuit.png')
+transpiled_qc.draw(output='mpl', filename='initialized_circuit.png')
 
 # Apply the Oracle
 qc.cz(0, 2)
@@ -32,15 +32,13 @@ qc.cz(1, 2)
 # Apply a barrier for visual separation
 qc.barrier()
 transpiled_qc = transpile(qc)
-transpiled_qc.draw(output='mpl', filename='qiskit/oracle_circuit.png')
+transpiled_qc.draw(output='mpl', filename='oracle_circuit.png')
 
 # Apply the Diffuser
 # for qubit in range(number_of_qubits):
 #     qc.h(qubit)
 #     qc.x(qubit)
-    
 # qc.ccz(0, 1, 2)
-
 # for qubit in range(number_of_qubits):
 #     qc.x(qubit)
 #     qc.h(qubit)
@@ -58,7 +56,7 @@ for qubit in range(number_of_qubits):
 # Apply a barrier for visual separation
 qc.barrier()
 transpiled_qc = transpile(qc)
-transpiled_qc.draw(output='mpl', filename='qiskit/diffuser_circuit.png')
+transpiled_qc.draw(output='mpl', filename='diffuser_circuit.png')
 
 # Measure all qubits
 qc.measure_all()
@@ -68,12 +66,7 @@ statevector_sim = Aer.StatevectorSimulator()
 transpiled_grover_circuit = transpile(qc, statevector_sim)
 results = statevector_sim.run(transpiled_grover_circuit).result()
 counts = results.get_counts()
-plot_histogram(counts).savefig('qiskit/histogram.png')
-# result = StatevectorSimulator().run(qc).result()
-# statevector = result.get_statevector().data
-
-# print("\nStatevector of the circuit is:",statevector)
-# plot_state_city(statevector).savefig('statevector.png')
+plot_histogram(counts).savefig('histogram.png')
 
 # TODO 
 # 1. Create a circuit for 110, 101
