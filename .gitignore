@@ -210,10 +210,23 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-# End of https://www.toptal.com/developers/gitignore/api/python,julia,jupyternotebooks
+### venv ###
+# Virtualenv
+# http://iamzed.com/2009/05/07/a-primer-on-virtualenv/
+[Bb]in
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+pyvenv.cfg
+pip-selfcheck.json
 
 # image files
 initialized_circuit.png
 oracle_circuit.png
 diffuser_circuit.png
 histogram.png
+
+# End of https://www.toptal.com/developers/gitignore/api/python,julia,jupyternotebooks
+
