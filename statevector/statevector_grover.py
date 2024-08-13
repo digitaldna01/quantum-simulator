@@ -8,35 +8,21 @@ def create_statevector_qubits(n):
     statevector[0] = 1
     return statevector
 
-# Define the convert function of possible qubit states from statevector
-def top_possible_qubit_states(statevector):
-    num_qubits = len(statevector).bit_length() - 1
-    max_prob = 0
-    result = []
-    for i in range(len(statevector)):
-        if np.abs(statevector[i]) > max_prob:
-            max_prob = np.abs(statevector[i])
-            result = []
-            result.append(f'|{i:0{num_qubits}b}>')
-        elif np.abs(statevector[i]) == max_prob:
-            result.append(f'|{i:0{num_qubits}b}>')
-    return result
-
 def oracle_circuit(StatevectorCircuit, marked_states):
     # check marked states and mark which states we need to find
     for mid, target in enumerate(marked_states):
-        rev_target = target[::-1]
-        zero_inds = [ind for ind in range(number_of_qubits) if rev_target[ind] == '0']
-    if zero_inds != []:
-        StatevectorCircuit.x(zero_inds)
-    # mcz
-    StatevectorCircuit.h(number_of_qubits - 1) # Apply H-gate to the last qubit
-    # TODO Apply the multi-controlled-x gate
-    StatevectorCircuit.mcx(list(range(number_of_qubits - 1)), number_of_qubits - 1) # multi-controlled-x gate
-    StatevectorCircuit.h(number_of_qubits - 1) # Apply H-gate to the last qubit
-    if zero_inds != []:
-        StatevectorCircuit.x(zero_inds)
-    pass
+        # Apply the X gate to non zero marked states qubits
+        zero_inds = [ind for ind in range(number_of_qubits) if target[ind] == '0']
+        if zero_inds != []:
+            for i in range(len(zero_inds)):
+                StatevectorCircuit.x(zero_inds[i])
+        # mcz
+        StatevectorCircuit.mcz(list(range(StatevectorCircuit.num_qubits - 1)), StatevectorCircuit.num_qubits - 1) # multi-controlled-x gate
+        # Apply the X gate to non zero marked states qubits
+        if zero_inds != []:
+            for i in range(len(zero_inds)):
+                StatevectorCircuit.x(zero_inds[i])
+    return StatevectorCircuit
 
 def diffuser_circuit(StatevectorCircuit):
     for qubit in range(StatevectorCircuit.num_qubits):
@@ -44,10 +30,8 @@ def diffuser_circuit(StatevectorCircuit):
     for qubit in range(StatevectorCircuit.num_qubits):   
         StatevectorCircuit.x(qubit)
     StatevectorCircuit.h(StatevectorCircuit.num_qubits-1)
-    # Apply the multi-controlled-x gate 
-    # TODO Apply the multi-controlled-x gate
+    # Apply the multi-controlled-x gate to the qubits
     StatevectorCircuit.mcx(list(range(StatevectorCircuit.num_qubits-1)), StatevectorCircuit.num_qubits-1)
-    ### ###
     StatevectorCircuit.h(StatevectorCircuit.num_qubits-1)
     for qubit in range(StatevectorCircuit.num_qubits):
         StatevectorCircuit.x(qubit)
@@ -79,23 +63,24 @@ def grover_cirquit(num_qubits, marked_states):
     # Apply the Diffuser
     # TODO Create the diffuser circuit
     statevector = diffuser_circuit(statevector)
+    
+    return statevector
 
 
 # TESTING
 # Define the number of qubits
 number_of_qubits = 3
 # Define the marked state
-marked_state = ['101']
+marked_states = ['101', '110']
 
-simulator = StatevectorCircuit(number_of_qubits)
-simulator.h(1)
-simulator.cx(1, 2)
+# simulator = StatevectorCircuit(number_of_qubits)
+simulator = grover_cirquit(number_of_qubits, marked_states)
+print("Marked states: ", marked_states, "\n")
+print("statevector Result :", simulator.statevector, "\n")
 print("Statevector to qubits", simulator.statevector_to_qubits(), "\n")
-print("Top Possible qubit states ", simulator.top_possible_qubit_states(), "\n")
+print("Top Possible qubit states ", simulator.top_possible_qubit_states(), "\n")   
 print("statevector: ", simulator.statevector, "\n")
 
 
 # TODO
-# 1. implement the grover algorithm
-# 2. implement MCX gate
 # 3. test the grover algorithm
