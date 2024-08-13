@@ -12,19 +12,41 @@ S = np.array([[1, 0], [0, 1j]], dtype=complex)
 T = np.array([[1, 0], [0, np.exp(1j * np.pi / 4)]], dtype=complex)
 
 # initiate 2-qubit gates
-CX = np.zeros((2, 2, 2, 2), dtype=complex)
-CX[0][0][0][0] = 1
-CX[0][1][0][1] = 1
-CX[1][0][1][1] = 1
-CX[1][1][1][0] = 1
+CX = np.zeros((4, 4), dtype=complex)
+CX[0][0] = 1
+CX[1][1] = 1
+CX[2][3] = 1
+CX[3][2] = 1
 
-CZ = np.zeros((2, 2, 2, 2), dtype=complex)
-CZ[0][0][0][0] = 1
-CZ[0][1][0][1] = 1
-CZ[1][0][1][0] = 1
-CZ[1][1][1][1] = -1
+CZ = np.zeros((4, 4), dtype=complex)
+CZ[0][0] = 1
+CZ[1][1] = 1
+CZ[2][2] = 1
+CZ[3][3] = -1
+
+# CX = np.zeros((2, 2, 2, 2), dtype=complex)
+# CX[0][0][0][0] = 1
+# CX[0][1][0][1] = 1
+# CX[1][0][1][1] = 1
+# CX[1][1][1][0] = 1
+
+# CZ = np.zeros((2, 2, 2, 2), dtype=complex)
+# CZ[0][0][0][0] = 1
+# CZ[0][1][0][1] = 1
+# CZ[1][0][1][0] = 1
+# CZ[1][1][1][1] = -1
 
 # initiate 3-qubit gates
+CCX = np.zeros((8, 8), dtype=complex)
+CCX[0][0] = 1
+CCX[1][1] = 1
+CCX[2][2] = 1
+CCX[3][3] = 1
+CCX[4][4] = 1
+CCX[5][5] = 1
+CCX[6][7] = 1
+CCX[7][6] = 1
+
 CCX = np.zeros((2, 2, 2, 2, 2, 2), dtype=complex)
 CCX[0][0][0][0][0][0] = 1
 CCX[0][0][1][0][0][1] = 1
@@ -45,7 +67,9 @@ CCZ[1][0][1][1][0][1] = 1
 CCZ[1][1][0][1][1][0] = 1
 CCZ[1][1][1][1][1][1] = -1
 
-
+# gate generator
+def gate_generator(gate, num_qubits, apply_qubit):
+    pass
 
 class StatevectorCircuit(object):
     def __init__(self, num_qubits):
@@ -86,10 +110,38 @@ class StatevectorCircuit(object):
         # If apply gate index is the same as the current loop index, kron gate to apply gate
         for i in range(self.num_qubits):
             if i == apply_qubit:
-                apply_gate = np.kron(gate, apply_gate)
+                apply_gate = np.kron(apply_gate, gate)
             else:
-                apply_gate = np.kron(I, apply_gate)
+                apply_gate = np.kron(apply_gate, I)
         self.statevector = np.dot(apply_gate, self.statevector)
+    
+    # TODO Need to Implement the multi-gate-function
+    # Apply the gates box to the designated qubits 
+    def control_target_gate(self, gate, control_qubit, target_qubit):
+        # Define projectors |0><0| and |1><1|
+        control = np.array([[1, 0], [0, 0]])
+        target = np.array([[0, 0], [0, 1]])
+
+        control_gate = 1
+        target_gate = 1
+        # Define the control-target gate
+        for qubit in range(self.num_qubits):
+            if qubit == control_qubit:
+                control_gate = np.kron(control_gate, control)
+                target_gate = np.kron(target_gate, target)
+            elif qubit == target_qubit:
+                control_gate = np.kron(control_gate, I)
+                target_gate = np.kron(target_gate, gate)
+            else:
+                control_gate = np.kron(control_gate, I)
+                target_gate = np.kron(target_gate, I)
+        
+        gate = control_gate + target_gate  
+        return gate
+
+    def apply_mul_gates(self, gates, operating_qubits):
+        for i, apply_qubit in enumerate(operating_qubits):
+            self.apply_gate(gates[i], [apply_qubit])
 
     ### Pauli Gates ###
     # Define the X gate
@@ -122,7 +174,19 @@ class StatevectorCircuit(object):
     def t(self, apply_qubit):
         # create applying matrix with T gate
         self.apply_gate(T, apply_qubit)
+        
+    ### 2-qubit Gates ###
+    # Define the CNOT gate
+    def cx(self, control_qubit, target_qubit):
+        # create applying matrix with CNOT gate
+        CX = self.control_target_gate(X, control_qubit, target_qubit)
+        self.statevector = np.dot(CX, self.statevector)
     
+    def cz(self, control_qubit, target_qubit):
+        # create applying matrix with CZ gate
+        CZ = self.control_target_gate(Z, control_qubit, target_qubit)
+        self.statevector = np.dot(CZ, self.statevector)
+        
     # TODO                                                                                                                    
     def __repr__(self):
         return print(self.statevector_to_qubits())
