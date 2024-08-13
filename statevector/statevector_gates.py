@@ -72,6 +72,7 @@ class statevector_circuit(object):
                 result.append(f'|{i:0{num_qubits}b}>')
         return result   
     
+    # Define the convert function of statevector to qubits
     def statevector_to_qubits(self):
         result = ""
         for i in range(len(self.statevector)):
@@ -79,30 +80,25 @@ class statevector_circuit(object):
                 result += f'{self.statevector[i]:.2f} * |{i:0{self.num_qubits}b}> + '
         return result[:-2]
     
-    # TODO fix this 
+    # Define the apply gate function
     def apply_gate(self, gate, apply_qubit):
-        apply_gate = I
+        apply_gate = 1
+        # If apply gate index is the same as the current loop index, kron gate to apply gate
         for i in range(self.num_qubits):
             if i == apply_qubit:
-                apply_gate = gate
+                apply_gate = np.kron(gate, apply_gate)
             else:
-                apply_gate = np.kron(I, gate)
-        self.statevector = np.dot(gate, self.statevector)
-        
+                apply_gate = np.kron(I, apply_gate)
+        self.statevector = np.dot(apply_gate, self.statevector)
+
     # Define the hadarmard gate
     def h(self, apply_qubit):
         # create applying matrix with hadamard gate
-        for i in range(self.num_qubits):
-            if i == apply_qubit:
-                hadamard_gate = H
-            else:
-                hadamard_gate = np.kron(I, hadamard_gate)
-        print(hadamard_gate)
-        self.statevector = np.dot(hadamard_gate, self.statevector)
+        self.apply_gate(H, apply_qubit)
     
     # TODO                                                                                                                    
     def __repr__(self):
-        return print(self.statevector)
+        return print(self.statevector_to_qubits())
 # Define the hadarmard gate
 def h(n):
     """_summary_
