@@ -61,18 +61,16 @@ class TensorNetworkCircuit(object):
         with tn.NodeCollection(self.state_nodes):
             self.apply_gate(T, apply_qubit)
     
-            
     # Define simulation run
     def run(self):
         self.result = tn.contractors.optimal(self.state_nodes, output_edge_order=self.qubits)
     
     def state_to_qubits(self):
-        result_tensor = self.result.tensor
-        print(result_tensor)
+        result_statevector = self.result.tensor.flatten()
         result = ""
-        for i in range(len(result_tensor)):
-            if result_tensor[i] != 0:
-                result += f'{result_tensor[i]:.2f} * |{i:0{self.num_qubits}b}> + '
+        for i in range(len(result_statevector)):
+            if result_statevector[i] != 0:
+                result += f'{result_statevector[i]:.2f} * |{i:0{self.num_qubits}b}> + '
         return result[:-2]
     
     def state_representation(self):

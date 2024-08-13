@@ -14,7 +14,9 @@ tn_cirucit = TensorNetworkCircuit(number_of_qubits)
 # print("`state_nodes : ", tn_cirucit.state_nodes, "\n")
 # print("circuit qubits : ", tn_cirucit.qubits, "\n")
 
-tn_cirucit.h([0])
+tn_cirucit.h([1])
 tn_cirucit.run()
-print("result : ")
+result = tn_cirucit.result
+
+print("state : ")
 print(tn_cirucit.state_to_qubits(), "\n")
