@@ -1,5 +1,5 @@
 import numpy as np
-from statevector_gates import *
+from statevector_circuit import *
 
 # INITIALIZATION OF STATEVECTOR QUBITS
 # Define the statevector qubits
@@ -83,4 +83,5 @@ print("statevector: ", simulator.statevector, "\n")
 
 
 # TODO
+# make iteration function for testing
 # 3. test the grover algorithm
