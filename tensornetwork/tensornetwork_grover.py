@@ -2,13 +2,6 @@ import tensornetwork as tn
 from tensornetwork_circuit import *
 import numpy as np
 
-# INITIALIZATION OF STATEVECTOR QUBITS
-# Define the statevector qubits
-def create_statevector_qubits(TensorNetworkCircuit):
-    statevector = np.zeros(2**n, dtype=complex)
-    statevector[0] = 1
-    return statevector
-
 def grover_cirquit(num_qubits, marked_states):
     # Initialize the statevector qubits
     tn_circuit = TensorNetworkCircuit(num_qubits)
