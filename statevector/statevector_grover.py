@@ -37,7 +37,7 @@ number_of_qubits = 3
 marked_state = ['101']
 
 simulator = statevector_circuit(number_of_qubits)
-simulator.h(0)
+simulator.h(1)
 print(simulator.statevector_to_qubits())
 
 # statevector = create_statevector_qubits(number_of_qubits)
