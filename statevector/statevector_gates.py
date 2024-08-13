@@ -47,7 +47,7 @@ CCZ[1][1][1][1][1][1] = -1
 
 
 
-class statevector_circuit(object):
+class StatevectorCircuit(object):
     def __init__(self, num_qubits):
         self.num_qubits = num_qubits
         for i in range(num_qubits):
@@ -91,22 +91,43 @@ class statevector_circuit(object):
                 apply_gate = np.kron(I, apply_gate)
         self.statevector = np.dot(apply_gate, self.statevector)
 
+    ### Pauli Gates ###
+    # Define the X gate
+    def x(self, apply_qubit):
+        # create applying matrix with X gate
+        self.apply_gate(X, apply_qubit)
+    
+    # Define the Y gate
+    def y(self, apply_qubit):
+        # create applying matrix with Y gate
+        self.apply_gate(Y, apply_qubit)
+    
+    # Define the Z gate
+    def z(self, apply_qubit):
+        # create applying matrix with Z gate
+        self.apply_gate(Z, apply_qubit)
+    
+    ### Quantum Gates ###
     # Define the hadarmard gate
     def h(self, apply_qubit):
         # create applying matrix with hadamard gate
         self.apply_gate(H, apply_qubit)
     
+    # Define the S gate
+    def s(self, apply_qubit):
+        # create applying matrix with S gate
+        self.apply_gate(S, apply_qubit)
+    
+    # Define the T gate
+    def t(self, apply_qubit):
+        # create applying matrix with T gate
+        self.apply_gate(T, apply_qubit)
+    
     # TODO                                                                                                                    
     def __repr__(self):
         return print(self.statevector_to_qubits())
-# Define the hadarmard gate
-def h(n):
-    """_summary_
 
-    Args:
-        n (np.array): takes statevector of n qubits
-
-    Returns:
-        superpositioned: return the superpositioned state of n qubits after applying the hadarmard gate
-    """
-    return np.array([1/np.sqrt(2**n) for i in range(2**n)])
+# TODO 
+# Implement applying CNOT gate
+# Implement applying CZ gate
+# Implement the multi-controlled-x gate
