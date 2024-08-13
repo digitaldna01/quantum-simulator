@@ -116,6 +116,7 @@ class StatevectorCircuit(object):
         self.statevector = np.dot(apply_gate, self.statevector)
     
     # TODO Need to Implement the multi-gate-function
+    
     # Apply the gates box to the designated qubits 
     def control_target_gate(self, gate, control_qubit, target_qubit):
         # Define projectors |0><0| and |1><1|
@@ -138,6 +139,58 @@ class StatevectorCircuit(object):
         
         gate = control_gate + target_gate  
         return gate
+    
+    # Apply the gates box to the designated qubits 
+    def controls_target_gate(self, gate, control_qubits, target_qubit):
+        # Define projectors |0><0| and |1><1|
+        P0 = [[1, 0], [0, 0]]
+        P1 = [[0, 0], [0, 1]]
+
+        # case P0, P1
+        cases = [P0, P1]
+        # define numer of cases
+        num_of_cases = 2 ** len(control_qubits)
+        
+        # Define empty matrix
+        matrix = np.zeros((2 ** self.num_qubits, 2 ** self.num_qubits), dtype=complex)
+        
+        # Define the control-target gate
+        ### TODO
+        # 둘다 하나씩일때 하는거다
+        for cases in range(num_of_cases - 1):
+            # local variable for each cases matrix
+            term = np.eye(1)
+            order = 0
+            # cases box
+            control_state = [int(x) for x in format(cases, f'0{len(control_qubits)}b')]
+            print(control_state[0])
+            for qubit in range(self.num_qubits):
+                # loop
+                if qubit in control_qubits:
+                    index = control_state[order]
+                    if index == 0:
+                        term = np.kron(term, P0)
+                    else:
+                        term = np.kron(term, P1)
+                    order += 1
+                else:
+                    term = np.kron(term, I)
+            matrix += term
+        
+        last_term = np.eye(1)
+        # Both controls are |1>
+        for qubit in range(self.num_qubits):
+            if qubit in control_qubits:
+                last_term = np.kron(last_term, P1)
+            elif qubit == target_qubit:
+                last_term = np.kron(last_term, gate)
+            else:
+                last_term = np.kron(last_term, I)
+        
+        matrix += last_term
+        print(matrix)
+        return matrix
+    
 
     def apply_mul_gates(self, gates, operating_qubits):
         for i, apply_qubit in enumerate(operating_qubits):
@@ -179,13 +232,23 @@ class StatevectorCircuit(object):
     # Define the CNOT gate
     def cx(self, control_qubit, target_qubit):
         # create applying matrix with CNOT gate
-        CX = self.control_target_gate(X, control_qubit, target_qubit)
+        CX = self.controls_target_gate(X, [control_qubit], target_qubit)
         self.statevector = np.dot(CX, self.statevector)
     
     def cz(self, control_qubit, target_qubit):
         # create applying matrix with CZ gate
-        CZ = self.control_target_gate(Z, control_qubit, target_qubit)
+        CZ = self.controls_target_gate(Z, [control_qubit], target_qubit)
         self.statevector = np.dot(CZ, self.statevector)
+    
+    def ccx(self, control_qubits, target_qubit):
+        # create applying matrix with CCX gate
+        CCX = self.controls_target_gate(X, control_qubits, target_qubit)
+        self.statevector = np.dot(CCX, self.statevector)
+    
+    def ccz(self, control_qubits, target_qubit):
+        # create applying matrix with CCZ gate
+        CCZ = self.controls_target_gate(Z, control_qubits, target_qubit)
+        self.statevector = np.dot(CCZ, self.statevector)    
         
     # TODO                                                                                                                    
     def __repr__(self):
