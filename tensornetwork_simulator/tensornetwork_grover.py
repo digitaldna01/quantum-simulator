@@ -1,5 +1,5 @@
 import tensornetwork as tn
-from tensornetwork_circuit import *
+from tensornetwork_circuit import TensorNetworkCircuit
 import numpy as np
 
 def grover_cirquit(num_qubits, marked_states):
@@ -14,7 +14,7 @@ def grover_cirquit(num_qubits, marked_states):
     # TODO Create the oracle circuit
     for mid, target in enumerate(marked_states):
         # Apply the X gate to non zero marked states qubits
-        zero_inds = [ind for ind in range(number_of_qubits) if target[ind] == '0']
+        zero_inds = [ind for ind in range(num_qubits) if target[ind] == '0']
         if zero_inds != []:
             for i in range(len(zero_inds)):
                 tn_circuit.x([zero_inds[i]])
@@ -41,29 +41,26 @@ def grover_cirquit(num_qubits, marked_states):
     
     return tn_circuit
 
-# Define the number of qubits
-number_of_qubits = 4
 
-# Define the marked state
-marked_states = ['1010', '1110']
-    
-tn_cirucit = grover_cirquit(number_of_qubits, marked_states)
-# print("number of qubits : ", tn_cirucit.num_qubits, "\n")
-# print("`state_nodes : ", tn_cirucit.state_nodes, "\n")
-# print("circuit qubits : ", tn_cirucit.qubits, "\n")
 
-tn_cirucit.run()
+# TESTING Example   
+# # Define the number of qubits
+# number_of_qubits = 4
 
-print("Marked_states : ", marked_states, "\n")
-print("state : ")
-print(tn_cirucit.state_to_qubits(), "\n")
-print("Top possible qubit states : ")
-print(tn_cirucit.top_possible_qubit_states(), "\n")
+# # Define the marked state
+# marked_states = ['1010', '1110', '0001']
+
+# # Create the grover cirquit and run    
+# tn_cirucit = grover_cirquit(number_of_qubits, marked_states)
+# tn_cirucit.run()
+
+# # Check the circuit correctness
+# print("Marked_states : ", marked_states, "\n")
+# print("state : ")
+# print(tn_cirucit.state_to_qubits(), "\n")
+# print("Top possible qubit states : ")
+# print(tn_cirucit.top_possible_qubit_states(), "\n")
 
 # TODO
-# Create the initalization superposition circuit
-# Create the oracle circuit
-# Create the diffuser circuit
-# Create the grover cirquit
-# Run the grover cirquit
+
 

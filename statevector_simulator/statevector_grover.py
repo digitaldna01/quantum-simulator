@@ -1,5 +1,7 @@
 import numpy as np
-from statevector_circuit import *
+from statevector_circuit import StatevectorCircuit
+import os
+import timeit
 
 # INITIALIZATION OF STATEVECTOR QUBITS
 # Define the statevector qubits
@@ -12,7 +14,7 @@ def oracle_circuit(StatevectorCircuit, marked_states):
     # check marked states and mark which states we need to find
     for mid, target in enumerate(marked_states):
         # Apply the X gate to non zero marked states qubits
-        zero_inds = [ind for ind in range(number_of_qubits) if target[ind] == '0']
+        zero_inds = [ind for ind in range(StatevectorCircuit.num_qubits) if target[ind] == '0']
         if zero_inds != []:
             for i in range(len(zero_inds)):
                 StatevectorCircuit.x(zero_inds[i])
@@ -67,21 +69,22 @@ def grover_cirquit(num_qubits, marked_states):
     return statevector
 
 
-# TESTING
-# Define the number of qubits
-number_of_qubits = 3
-# Define the marked state
-marked_states = ['101', '110']
+### TESTING ###
+# # Define the number of qubits
+# number_of_qubits = 3
 
-# simulator = StatevectorCircuit(number_of_qubits)
-simulator = grover_cirquit(number_of_qubits, marked_states)
-print("Marked states: ", marked_states, "\n")
-print("statevector Result :", simulator.statevector, "\n")
-print("Statevector to qubits", simulator.statevector_to_qubits(), "\n")
-print("Top Possible qubit states ", simulator.top_possible_qubit_states(), "\n")   
-print("statevector: ", simulator.statevector, "\n")
+# # Define the marked state
+# marked_states = ['101', '110']
+
+# # Create the grover cirquit and run
+# simulator = grover_cirquit(number_of_qubits, marked_states)
+
+# # Check the execution time
+# print("Execution time:", execution_time, "seconds", "\n")
+
+# # Check the circuit correctness
+# print("Marked states: ", marked_states, "\n")
+# print("Top Possible qubit states ", simulator.top_possible_qubit_states(), "\n")   
 
 
 # TODO
-# make iteration function for testing
-# 3. test the grover algorithm

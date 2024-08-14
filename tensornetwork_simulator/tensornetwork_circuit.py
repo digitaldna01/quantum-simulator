@@ -12,12 +12,6 @@ H = np.array([[1, 1], [1, -1]], dtype=complex) / np.sqrt(2)
 S = np.array([[1, 0], [0, 1j]], dtype=complex)
 T = np.array([[1, 0], [0, np.exp(1j * np.pi / 4)]], dtype=complex)
 
-CNOT = np.zeros((2, 2, 2, 2), dtype=complex)
-CNOT[0][0][0][0] = 1
-CNOT[0][1][0][1] = 1
-CNOT[1][0][1][1] = 1
-CNOT[1][1][1][0] = 1
-
 class TensorNetworkCircuit(object):
     def __init__(self, num_qubits):
         self.num_qubits = num_qubits
@@ -27,7 +21,6 @@ class TensorNetworkCircuit(object):
             self.qubits = [node[0] for node in state]
         self.result = None
 
-    
     # Define apply gate function
     # apply_qubit parameter is the list of qubit index that the gate will be applied to
     def apply_gate(self, gate, apply_qubit):
@@ -36,7 +29,6 @@ class TensorNetworkCircuit(object):
             tn.connect(self.qubits[qubit], gate_node[index_of_gate])
             self.qubits[qubit] = gate_node[index_of_gate + len(apply_qubit)]
     
-    # TODO Implement this function
     # Define the multi-controlled gate
     def controls_target_gate_generator(self, gate, num_control_qubits):
         # Define projectors |0><0| and |1><1|
@@ -48,7 +40,7 @@ class TensorNetworkCircuit(object):
         total_qubits = num_control_qubits + 1
         
         matrix = np.zeros((2 ** (num_control_qubits + 1), 2 ** (num_control_qubits + 1)), dtype=complex)
- 
+
         for index in range(num_of_cases):
             # local variable for each cases matrix
             term = np.eye(1)
@@ -154,7 +146,7 @@ class TensorNetworkCircuit(object):
     
     # Define simulation run
     def run(self):
-        self.result = tn.contractors.optimal(self.state_nodes, output_edge_order=self.qubits)
+        self.result = tn.contractors.greedy(self.state_nodes, output_edge_order=self.qubits)
     
     # Define the convert function of matrix state to qubits
     def state_to_qubits(self):
