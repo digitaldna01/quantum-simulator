@@ -44,22 +44,22 @@ def grover_cirquit(num_qubits, marked_states):
 
 
 # TESTING Example   
-# # Define the number of qubits
-# number_of_qubits = 4
+# Define the number of qubits
+number_of_qubits = 4
 
-# # Define the marked state
-# marked_states = ['1010', '1110', '0001']
+# Define the marked state
+marked_states = ['1010', '1110', '0001']
 
-# # Create the grover cirquit and run    
-# tn_cirucit = grover_cirquit(number_of_qubits, marked_states)
-# tn_cirucit.run()
+# Create the grover cirquit and run    
+tn_cirucit = grover_cirquit(number_of_qubits, marked_states)
+tn_cirucit.run()
 
-# # Check the circuit correctness
-# print("Marked_states : ", marked_states, "\n")
-# print("state : ")
-# print(tn_cirucit.state_to_qubits(), "\n")
-# print("Top possible qubit states : ")
-# print(tn_cirucit.top_possible_qubit_states(), "\n")
+# Check the circuit correctness
+print("Marked_states : ", marked_states, "\n")
+print("state : ")
+print(tn_cirucit.state_to_qubits(), "\n")
+print("Top possible qubit states : ")
+print(tn_cirucit.top_possible_qubit_states(), "\n")
 
 # TODO
 

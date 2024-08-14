@@ -68,23 +68,19 @@ def grover_cirquit(num_qubits, marked_states):
     
     return statevector
 
-
 ### TESTING ###
-# # Define the number of qubits
-# number_of_qubits = 3
+# Define the number of qubits
+number_of_qubits = 3
 
-# # Define the marked state
-# marked_states = ['101', '110']
+# Define the marked state
+marked_states = ['101', '110']
 
-# # Create the grover cirquit and run
-# simulator = grover_cirquit(number_of_qubits, marked_states)
+# Create the grover cirquit and run
+simulator = grover_cirquit(number_of_qubits, marked_states)
 
-# # Check the execution time
-# print("Execution time:", execution_time, "seconds", "\n")
-
-# # Check the circuit correctness
-# print("Marked states: ", marked_states, "\n")
-# print("Top Possible qubit states ", simulator.top_possible_qubit_states(), "\n")   
+# Check the circuit correctness
+print("Marked states: ", marked_states, "\n")
+print("Top Possible qubit states ", simulator.top_possible_qubit_states(), "\n")   
 
 
 # TODO

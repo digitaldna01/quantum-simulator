@@ -37,22 +37,6 @@ def diffuser_circuit(qc, number_of_qubits):
         qc.h(qubit)
     return qc
 
-
-# Apply the Diffuser
-##########################################
-# for qubit in range(number_of_qubits):
-#     qc.h(qubit)
-# for qubit in range(number_of_qubits):   
-#     qc.x(qubit)
-# qc.h(number_of_qubits-1)
-# qc.mcx(list(range(number_of_qubits-1)), number_of_qubits-1)
-# qc.h(number_of_qubits-1)
-# for qubit in range(number_of_qubits):
-#     qc.x(qubit)
-# for qubit in range(number_of_qubits):  
-#     qc.h(qubit)
-##########################################
-
 def grover_circuit(num_qubits, marked_states):
     ### Create a Quantum Circuit with three qubits
     qc = QuantumCircuit(num_qubits)
@@ -79,24 +63,24 @@ def get_result(result, num_of_qubits, marked_states):
     return result
     
 ### TESTING ###
-# # Define the number of qubits
-# number_of_qubits = 3
+# Define the number of qubits
+number_of_qubits = 3
 
-# # Define the marked state
-# marked_states = ['101', '110']
+# Define the marked state
+marked_states = ['101', '110']
 
-### Run simulation on Statevector backend
-# statevector_sim = Aer.StatevectorSimulator()
-# qsam_sim = Aer.QasmSimulator()
+## Run simulation on Statevector backend
+statevector_sim = Aer.StatevectorSimulator()
+qsam_sim = Aer.QasmSimulator()
 
-# sim = Aer.StatevectorSimulator()
-# qc = grover_circuit(number_of_qubits, marked_states)
+sim = Aer.StatevectorSimulator()
+qc = grover_circuit(number_of_qubits, marked_states)
 
-# result = sim.run(qc).result()
-# result = get_result(result, number_of_qubits, marked_states)
+result = sim.run(qc).result()
+result = get_result(result, number_of_qubits, marked_states)
 
-# print("Marked states : ", marked_states, "\n")
-# print("Qiskit Found Result : ", result, "\n")
+print("Marked states : ", marked_states, "\n")
+print("Qiskit Found Result : ", result, "\n")
 
 # TODO 
 # Plot the results
