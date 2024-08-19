@@ -42,7 +42,6 @@ def grover_cirquit(num_qubits, marked_states):
     return tn_circuit
 
 
-
 # TESTING Example   
 # Define the number of qubits
 number_of_qubits = 4
