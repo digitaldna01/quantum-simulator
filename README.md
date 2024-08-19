@@ -1,9 +1,8 @@
-quantum-simulator
+Quantum Simulator 
 ===
 
 # Goal 
-
-Goal of this project is creating quantum simulator using Tensor Network framework by google
+Goal of this project is creating quantum simulator using Tensor Network framework by google.
 ---
 
 
