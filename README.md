@@ -14,9 +14,13 @@ In order to understand how the state vector and qiskit circuit works, implement 
 # Requirement Packages
 
 ## Virtual Environment
-Python
-> python
+> Python
 
-    Python 3.12.0    
+    Python 3.12.0   
+     
+
+
 ## Requirements.txt
+The **requirements.txt** file should list all Python libraries that this code files depend on, and they will be installed using:
+> pip install -r requirements.txt
 ---
