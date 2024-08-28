@@ -7,6 +7,7 @@ The purpose of this project is to create a quantum simulator using Google's Tens
 Google's tensor network represents complex, high-dimensional tensors as a network of smaller tensors. It can be expanded or contracted using edge contraction and edge splitting. Edge contraction in a tensor network can significantly increase computational speed by avoiding a large number of operations when performing extensive computations.
 
 ### Quantum Simulator
+
 The unique feature of a tensor network is that it can represent quantum simulator circuits directly. For example, when applying Hadamard, X, or Y gates to the first qubit, the gate nodes will have input and output legs. The input leg is connected to the qubit where you want to apply the gate, and the leg coming out after the gate represents the result after the qubit has been computed.
 ---
 
