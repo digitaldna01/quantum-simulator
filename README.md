@@ -34,14 +34,18 @@ Replace 'myenv' with your virtual environment name
 
 #### 4. Activate the virtual environment:
 * For Mac
-  * To activate
-    >   
-        source myenv/bin/activate
-    After activation, you should see '(myenv)' at the beginning of your terminal prompt.
+>   
+    source myenv/bin/activate
+  
 * For Window
->
+  * For Command Prompt:
+    >
+        myenv\Scripts\activate
+  * For PowerSehll:
+    >
+        .\myenv\Scripts\Activate
 
-
+After activation, you should see '(myenv)' at the beginning of your terminal prompt.
 
 ## Requirements.txt
 The `requirements.txt` file should list all the Python libraries that these code files require, and the libraries will be installed by:
