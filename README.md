@@ -14,8 +14,6 @@ In order to understand how the state vector and qiskit circuit works, implement 
 # Requirement Packages
 
 ## Python Version
-> Python
-
     Python 3.12.0 
 
 ## Virtual Environment
