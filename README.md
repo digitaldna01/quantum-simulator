@@ -27,8 +27,13 @@ If you system does not have `venv` library, install it using apt.
 >   
     sudo apt install python3-venv
 
-1. 
+#### 2. Navigate to the project directory where you want to create a virtual environment and install the required packages for the quantum simulator.
 
+#### 3. Run the 'venv' module in your designated directory
+Replace 'myenv' with your virtual environment name
+    python3 -m venv myenv
+
+#### 4. 
 ## Requirements.txt
 The `requirements.txt` file should list all the Python libraries that these code files require, and the libraries will be installed by:
 >
