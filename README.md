@@ -2,13 +2,11 @@ Quantum Simulator
 ===
 
 # Goal 
-
 Goal of this project is creating quantum simulator using Tensor Network framework by google.
 ---
 
 <!-- TODO -->
-## Sub Goal
-
+### Sub Goal
 In order to understand how the state vector and qiskit circuit works, implement grover algorithm with qiskit as the step 1
 ---
 
@@ -34,7 +32,14 @@ Replace 'myenv' with your virtual environment name
 >
     python3 -m venv myenv
 
-#### 4. 
+#### 4. Activate the virtual environment:
+* For Mac
+  * >
+  *     source myenv/bin/activate
+* For Window
+  * 
+
+
 ## Requirements.txt
 The `requirements.txt` file should list all the Python libraries that these code files require, and the libraries will be installed by:
 >
