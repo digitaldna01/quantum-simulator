@@ -21,7 +21,7 @@ In order to understand how the state vector and qiskit circuit works, implement 
 Creating a virtual environment to install packages in Python app development instead of modifying the system-wide environment will allow you to seperate packages.
 
 ### How to start Python Development with Python Environment
-1. Install `python3-venv` or `python3.x-venv`
+#### 1. Install `python3-venv` or `python3.x-venv`
 
 If you system does not have `venv` library, install it using apt.
 >   
