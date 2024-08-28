@@ -34,10 +34,12 @@ Replace 'myenv' with your virtual environment name
 
 #### 4. Activate the virtual environment:
 * For Mac
-    >   
+>   
     source myenv/bin/activate
+After activation, you should see '(myenv)' at the beginning of your terminal prompt.
 * For Window
-  * 
+>
+
 
 
 ## Requirements.txt
