@@ -34,7 +34,8 @@ Replace 'myenv' with your virtual environment name
 
 #### 4. Activate the virtual environment:
 * For Mac
-    >   source myenv/bin/activate
+    >   
+    source myenv/bin/activate
 * For Window
   * 
 
