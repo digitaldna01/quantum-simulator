@@ -47,6 +47,10 @@ Replace 'myenv' with your virtual environment name
 
 After activation, you should see '(myenv)' at the beginning of your terminal prompt.
 
+#### 5. Deactivate the virtual enviornment, run:
+>
+    deactivate
+
 ## Requirements.txt
 The `requirements.txt` file should list all the Python libraries that these code files require, and the libraries will be installed by:
 >
