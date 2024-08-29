@@ -42,7 +42,7 @@ def grover_circuit(num_qubits, marked_states):
     qc = QuantumCircuit(num_qubits)
     
     # Apply H-gate to each qubit:
-    for qubit in range(3):
+    for qubit in range(num_qubits):
         qc.h(qubit)
         
     # Apply a Oracle
@@ -64,10 +64,10 @@ def get_result(result, num_of_qubits, marked_states):
     
 ### TESTING ###
 # Define the number of qubits
-number_of_qubits = 3
+number_of_qubits = 4
 
 # Define the marked state
-marked_states = ['101', '110']
+marked_states = ['0101', '1100']
 
 ## Run simulation on Statevector backend
 statevector_sim = Aer.StatevectorSimulator()
