@@ -8,6 +8,7 @@ Google's tensor network represents complex, high-dimensional tensors as a networ
 ### Quantum Simulator
 The unique feature of a tensor network is that it can represent quantum simulator circuits directly. For example, when applying Hadamard, X, or Y gates to the first qubit, the gate nodes will have input and output legs. The input leg is connected to the qubit where you want to apply the gate, and the leg coming out after the gate represents the result after the qubit has been computed.
 
+![Alt text](/img/Tensornetwork.png "Tensor Network")
 
 <!-- TODO -->
 ### Sub Goal
