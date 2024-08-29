@@ -14,7 +14,7 @@ The unique feature of a tensor network is that it can represent quantum simulato
 ## Sub Goal
 To implement a Tensor Network Quantum Simulator, it's worthwhile to be familiar with the Qiskit circuit simulator and the fundamental concepts of a state vector quantum simulator. In addition to the Tensor Network Quantum Simulator, I also implemented the Grover algorithm using Qiskit and the State Vector simulator. For the State Vector simulator, I utilized basic NumPy functions to compute the Kronecker product and inner product of state vectors.
 
-### Qiskit Simulator
+### [Qiskit Simulator](qiskit_simulator/README.md)
 In order to understand how qiskit Simulator works, I implement the Grover Algorithm with qiskit framework by IBM. Follow the Qiskit README to further
 [Link to Qiskit Simulator README](qiskit_simulator/README.md)
 
