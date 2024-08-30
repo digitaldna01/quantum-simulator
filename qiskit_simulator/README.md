@@ -18,7 +18,7 @@ The initialization State creates the search space, which is all possible cases t
 ### Oracle
 Apply the Oracle reflects the amplitude of marked state of the initialized state S. The amplitude of the marked states become negative. 
 
-### Diffuser
+### Diffuser 
 Apply the additional feature called Diffuser to amplify the amplitude.
 
 ![Alt text](/img/grover_circuit.png "Grover Circuit")
