@@ -22,5 +22,5 @@ Apply the Oracle reflection to the initialized state S.
 
 ### References 
 If you want to know more, follow this link from IBM. They explained it so well.
->
-    [Link to IBM Grover Algorithm Textbook](https://github.com/Qiskit/textbook/blob/main/notebooks/ch-algorithms/grover.ipynb)
+
+[Link to IBM Grover Algorithm Textbook](https://github.com/Qiskit/textbook/blob/main/notebooks/ch-algorithms/grover.ipynb)
