@@ -33,6 +33,7 @@ Manifest.toml
 
 .ipynb_checkpoints
 */.ipynb_checkpoints/*
+test.ipynb
 
 # IPython
 profile_default/

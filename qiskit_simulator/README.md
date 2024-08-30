@@ -16,9 +16,10 @@ Grover Algorithm takes a marked state or states (could be multiples) as input. I
 The initialization State creates the search space, which is all possible cases the answer could take. The search space would be all the items of that list. To initialize the space, apply Hadamard Gate to each qubits to superposition. 
 
 ### Oracle
-Apply the Oracle reflection to the initialized state S. 
+Apply the Oracle reflects the amplitude of marked state of the initialized state S. The amplitude of the marked states become negative. 
 
 ### Diffuser
+Apply the additional feature called Diffuser to amplify the amplitude.
 
 ![Alt text](/img/grover_circuit.png "Grover Circuit")
 * * *
