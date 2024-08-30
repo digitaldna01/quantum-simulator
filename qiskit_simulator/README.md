@@ -20,6 +20,8 @@ Apply the Oracle reflection to the initialized state S.
 
 ### Diffuser
 
+![Alt text](/img/grover_circuit.png "Grover Circuit")
+* * *
 ### References 
 If you want to know more, follow this link from IBM. They explained it so well.
 
