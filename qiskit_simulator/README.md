@@ -16,4 +16,5 @@ This illustrates how a quantum computer can achieve exponentially faster search 
 
 ### Diffuser
 
-If you want to know more, follow this explanantion from IBM. They explained it so well.
+If you want to know more, follow this link from IBM. They explained it so well.
+[Link to IBM Grover Algorithm Textbook](https://github.com/Qiskit/textbook/blob/main/notebooks/ch-algorithms/grover.ipynb)
