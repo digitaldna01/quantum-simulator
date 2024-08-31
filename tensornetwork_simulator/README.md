@@ -68,7 +68,7 @@ You can apply various quantum gates to specific qubits in the circuit:
     print(probable_states)
     ```
 
-## API **Reference
+## API Reference
 ### Classes and Methods
 TensorNetworkCircuit Class
 * `__init__(self, num_qubits)`: Initializes a quantum circuit with a specified number of qubits.
