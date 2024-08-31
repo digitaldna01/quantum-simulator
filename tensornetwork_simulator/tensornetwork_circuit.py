@@ -70,9 +70,6 @@ class TensorNetworkCircuit(object):
                 reshaped.append(2)
         matrix = matrix.reshape(reshaped)
         return matrix
-    
-    # TODO 타켓 순서에 상관없이 적용이 가능한가?
-    # CX = 그냥 CX 게이트
 
     # Define the X gate
     def x(self, apply_qubit):
