@@ -1,5 +1,6 @@
 # Simulating a Statevector Quantum Circuit
+A statevector is a common method for representing qubit states in quantum computing. Each possible state is ordered from `|0...0⟩` to `|1...1⟩` in ascending order. For instance, with three qubits, the possible states are `|000⟩, |001⟩, |010⟩, |011⟩, |100⟩, |101⟩, |110⟩, and |111⟩`. Each of these states represents a unique combination of the three qubits in binary form, creating a complete basis for the three-qubit system. In statevector notation, every state is expressed as a vector in a \(2^n\)-dimensional complex vector space, where \(n\) is the number of qubits. For example, the state `|000⟩` is represented as a column vector with a 1 in the first position and 0s in all others, while `|111⟩` has a 1 in the last position. This notation provides a precise mathematical framework for representing quantum states and allows for easy manipulation of concepts like superposition and entanglement.
 
-## State Vector
-
+## State Vector Circuit
+To get started, 
 ## State Vector Computing
