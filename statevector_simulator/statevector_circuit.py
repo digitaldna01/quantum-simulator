@@ -122,7 +122,6 @@ class StatevectorCircuit(object):
         
         return matrix
     
-
     def apply_mul_gates(self, gates, operating_qubits):
         for i, apply_qubit in enumerate(operating_qubits):
             self.apply_gate(gates[i], [apply_qubit])

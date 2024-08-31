@@ -5,9 +5,8 @@ import timeit
 
 # INITIALIZATION OF STATEVECTOR QUBITS
 # Define the statevector qubits
-def create_statevector_qubits(n):
-    statevector = np.zeros(2**n, dtype=complex)
-    statevector[0] = 1
+def create_statevector_qubits(num_qubits):
+    statevector = StatevectorCircuit(num_qubits)
     return statevector
 
 def oracle_circuit(StatevectorCircuit, marked_states):
