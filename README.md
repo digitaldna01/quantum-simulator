@@ -22,7 +22,7 @@ In order to understand how qiskit Simulator works, I implement the Grover Algori
 [Link to Statevector Simulator README](statevector_simulator/README.md)
 
 ## Tensor Network Simulator
-[Link to Tensor Network README](qiskit_simulator/README.md)
+[Link to Tensor Network README](tensornetwork_simulator/README.md)
 * * * 
 ## Requirement Packages
 
