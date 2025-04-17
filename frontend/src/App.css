@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#root {
+  max-width: 1440px;
+  
+  /* Font Family */
+  --font--family : "Titillium Web", sans-serif;
+  /* font-family: "politica", sans-serif; */
+  /* --color--primary : #7A5936; */
+  --color--primary : #FF4B00;
+  --color--secondary : #666666;
+  --color--third : #103329;
+  --color--white : #FFFFFF;
+  --color--black : #000000;
+
+  --color--black2 : #333333;
+  --color--black3 : #666666;
+  --color--black4 : #999999;
+  --color--black5 : #cccccc;
+
+  /* Font Size */
+  /* Title */
+  --font--tit--5xl: clamp(3rem, 6vw, 4.5rem);
+  --font--tit--4xl: clamp(2.5rem, 5vw, 3.75rem);
+  --font--tit--3xl: clamp(2rem, 4vw, 3rem);
+  --font--tit--2xl: clamp(1.5rem, 3vw, 2.25rem);
+  --font--tit--xl: clamp(1.25rem, 2.5vw, 1.5rem);
+  --font--tit--lg: clamp(1.125rem, 2vw, 1.312rem);
+  --font--tit--md: clamp(1rem, 1.8vw, 1.125rem);
+  --font--tit--sm: clamp(0.875rem, 1.5vw, 1rem);
+  --font--tit--xs: clamp(0.75rem, 1.2vw, 0.875rem);
+  --font--tit--2xs: clamp(0.625rem, 1vw, 0.75rem);
+
+  /* Text */
+  --font--txt--3xl: clamp(1.125rem, 2.5vw, 1.5rem);
+  --font--txt--2xl: clamp(1rem, 2vw, 1.375rem);
+  --font--txt--xl: clamp(0.875rem, 1.8vw, 1.25rem);
+  --font--txt--lg: clamp(0.75rem, 1.5vw, 1.125rem);
+  --font--txt--md: clamp(0.75rem, 1.2vw, 1rem);
+  --font--txt--sm: clamp(0.625rem, 1vw, 0.875rem);
+  --font--txt--xs: clamp(0.5rem, 0.8vw, 0.75rem);
+
+  /* Font weight*/
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 900;
+}
+
+/* Titillium Web Font*/
+.titillium-web-extralight {
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.titillium-web-light {
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 300;
+  font-style: normal;
+}
+
+.titillium-web-regular {
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.titillium-web-semibold {
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.titillium-web-bold {
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.titillium-web-black {
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 900;
+  font-style: normal;
+}
+
+.titillium-web-extralight-italic {
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 200;
+  font-style: italic;
+}
+
+.titillium-web-light-italic {
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.titillium-web-regular-italic {
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.titillium-web-semibold-italic {
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 600;
+  font-style: italic;
+}
+
+.titillium-web-bold-italic {
+  font-family: "Titillium Web", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.title {
+  font-family: var(--font--family);
+  font-size: var(--font--tit--xs);
+}
