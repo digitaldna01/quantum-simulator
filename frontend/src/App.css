@@ -10,7 +10,7 @@
   /* font-family: "politica", sans-serif; */
   /* --color--primary : #7A5936; */
   --color--primary : #FF4B00;
-  --color--secondary : #666666;
+  --color--secondary : #0169A6;
   --color--third : #103329;
   --color--white : #FFFFFF;
   --color--black : #000000;
@@ -22,25 +22,25 @@
 
   /* Font Size */
   /* Title */
-  --font--tit--5xl: clamp(3rem, 6vw, 4.5rem);
-  --font--tit--4xl: clamp(2.5rem, 5vw, 3.75rem);
-  --font--tit--3xl: clamp(2rem, 4vw, 3rem);
-  --font--tit--2xl: clamp(1.5rem, 3vw, 2.25rem);
-  --font--tit--xl: clamp(1.25rem, 2.5vw, 1.5rem);
-  --font--tit--lg: clamp(1.125rem, 2vw, 1.312rem);
-  --font--tit--md: clamp(1rem, 1.8vw, 1.125rem);
-  --font--tit--sm: clamp(0.875rem, 1.5vw, 1rem);
-  --font--tit--xs: clamp(0.75rem, 1.2vw, 0.875rem);
-  --font--tit--2xs: clamp(0.625rem, 1vw, 0.75rem);
+  --font--tit--5xl: clamp(3rem, 6vw, 4.5rem);               /* 72px */
+  --font--tit--4xl: clamp(2.5rem, 5vw, 3.75rem);            /* 60px */
+  --font--tit--3xl: clamp(2rem, 4vw, 3rem);                 /* 48px */
+  --font--tit--2xl: clamp(1.5rem, 3vw, 2.25rem);            /* 36px */
+  --font--tit--xl: clamp(1.25rem, 2.5vw, 1.5rem);           /* 24px */
+  --font--tit--lg: clamp(1.125rem, 2vw, 1.312rem);          /* 21px */
+  --font--tit--md: clamp(1rem, 1.8vw, 1.125rem);            /* 18px */
+  --font--tit--sm: clamp(0.875rem, 1.5vw, 1rem);            /* 16px */
+  --font--tit--xs: clamp(0.75rem, 1.2vw, 0.875rem);         /* 14px */
+  --font--tit--2xs: clamp(0.625rem, 1vw, 0.75rem);          /* 12px */
 
   /* Text */
-  --font--txt--3xl: clamp(1.125rem, 2.5vw, 1.5rem);
-  --font--txt--2xl: clamp(1rem, 2vw, 1.375rem);
-  --font--txt--xl: clamp(0.875rem, 1.8vw, 1.25rem);
-  --font--txt--lg: clamp(0.75rem, 1.5vw, 1.125rem);
-  --font--txt--md: clamp(0.75rem, 1.2vw, 1rem);
-  --font--txt--sm: clamp(0.625rem, 1vw, 0.875rem);
-  --font--txt--xs: clamp(0.5rem, 0.8vw, 0.75rem);
+  --font--txt--3xl: clamp(1.125rem, 2.5vw, 1.5rem);         /* 24px */
+  --font--txt--2xl: clamp(1rem, 2vw, 1.375rem);             /* 22px */
+  --font--txt--xl: clamp(0.875rem, 1.8vw, 1.25rem);         /* 20px */
+  --font--txt--lg: clamp(0.75rem, 1.5vw, 1.125rem);         /* 18px */
+  --font--txt--md: clamp(0.75rem, 1.2vw, 1rem);             /* 16px */
+  --font--txt--sm: clamp(0.625rem, 1vw, 0.875rem);          /* 14px */
+  --font--txt--xs: clamp(0.5rem, 0.8vw, 0.75rem);           /* 12px */
 
   /* Font weight*/
   --font-weight-light: 300;

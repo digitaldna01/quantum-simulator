@@ -1,0 +1,40 @@
+.all-gate {
+  font-family: var(--font--family);
+  font-size: var(--font--txt--md);
+}
+.hadamard {
+  background-color: var(--color--primary);
+  width: 36px;
+  height: 36px;
+}
+
+.single-gate {
+  background-color: var(--color--secondary);
+  width: 36px;
+  height: 36px;
+}
+
+.multi-gate-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  gap: 4px;
+}
+
+.circle {
+  background-color: var(--color--black4);
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.connector {
+  width: 2px;
+  height: 1rem;
+  background-color: var(--color--black4);
+  z-index: 0;
+}
