@@ -17,7 +17,7 @@ function App() {
         <div className="grid gap-4 w-full max-w-6xl">
           {/* TODO Get rid of height constraint */}
           {/* Circuits and Component */}
-          <div className="flex w-full max-h-[400px] h-[400px] border rounded-md overflow-hidden">
+          <div className="flex w-full max-h-[400px] border rounded-md ">
             <DndProvider backend={HTML5Backend}>
               <Circuit />
               <Components/>

@@ -2,11 +2,20 @@
   font-family: var(--font--family);
   font-size: var(--font--txt--md);
 }
+
+.initial-state {
+    background-color: var(--color--black4);
+    width: 36px;
+    height: 36px;
+  }
+
+  
 .hadamard {
   background-color: var(--color--primary);
   width: 36px;
   height: 36px;
 }
+
 
 .single-gate {
   background-color: var(--color--secondary);
@@ -37,4 +46,13 @@
   height: 1rem;
   background-color: var(--color--black4);
   z-index: 0;
+}
+
+.name{
+    font-weight: bold;
+    font-size: var(--font--tit--sm);
+}
+
+.description{
+    font-size: var(-font--txt--sm);
 }

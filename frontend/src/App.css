@@ -1,7 +1,3 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 #root {
   max-width: 1440px;
   
@@ -47,6 +43,58 @@
   --font-weight-regular: 400;
   --font-weight-bold: 700;
   --font-weight-extrabold: 900;
+}
+
+
+.color-black1{
+  color: var(--color--black1);
+}
+.color-black2{
+  color: var(--color--black2);
+}
+.color-black3{
+  color: var(--color--black3);
+}
+.color-black4{
+  color: var(--color--black4);
+}
+.color-black5{
+  color: var(--color--black5);
+}
+.border-color-black1 {
+  border-color: var(--color--black1);
+}
+
+.background-color-black1 {
+  background-color: var(--color--black1);
+}
+.background-color-black2 {
+  background-color: var(--color--black2);
+}
+.background-color-black3 {
+  background-color: var(--color--black3);
+} 
+.background-color-black4 {
+  background-color: var(--color--black4);
+}
+.background-color-black5 {
+  background-color: var(--color--black5);
+}
+
+.border-color-black2 {
+  border-color: var(--color--black2);
+}
+
+.border-color-black3 {
+  border-color: var(--color--black3);
+}
+
+.border-color-black4 {
+  border-color: var(--color--black4);
+}
+
+.border-color-black5 {
+  border-color: var(--color--black5);
 }
 
 /* Titillium Web Font*/
