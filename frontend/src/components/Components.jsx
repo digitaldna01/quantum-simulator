@@ -28,7 +28,7 @@ export default function Components() {
             {" "}
             {/* h-full*/}
             {/* Left 2 gates */}
-            <div className=" w-1/2 flex gap-4 border-r pl-2">
+            <div className="relative  w-1/2 flex gap-4 border-r pl-2">
               <Gate type="CZ" label="CZ" />
               <Gate type="MX" label="MX" />
             </div>

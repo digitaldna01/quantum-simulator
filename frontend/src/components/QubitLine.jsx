@@ -20,7 +20,7 @@ const QubitLine = ({ qubitId, gates, onDropGate }) => {
       <span className="text-white w-[60px] label">Q[{qubitId}]</span>
       <div
         ref={dropRef}
-        className={`relative flex flex-row gap-4 grow min-h-[48px] py-4 transition-all ${
+        className={`relative flex flex-row gap-6 grow min-h-[48px] py-4 transition-all ${
           isOver ? "bg-blue-900/20" : ""
         }`}
       >
@@ -28,8 +28,14 @@ const QubitLine = ({ qubitId, gates, onDropGate }) => {
         <div className="absolute top-1/2 left-0 w-full border-color-black4 border-t z-0"></div>
 
         {gates.map((gate, idx) => (
-          <div className="gap-4 z-10">
-            <Gate key={idx} type={gate.type} label={gate.type} />
+          <div key={idx} >
+            {/* Gate Line (세로줄) */}
+            {idx > 0 &&  (
+                <div className="absolute top-1/2  left-0 border-color-white border-t"></div>
+            )}
+            <div className=" z-10">
+              <Gate type={gate.type} label={gate.type} />
+            </div>
           </div>
         ))}
       </div>

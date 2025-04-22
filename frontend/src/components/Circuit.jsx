@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDrop } from "react-dnd";
 import axios from "axios";
 import Gate from "./Gate.jsx";
@@ -6,71 +6,66 @@ import QubitLine from "./QubitLine";
 import "./Circuit.css";
 import "../App.css";
 
-export default function Circuit() {
-  const [circuit, setCircuit] = useState([
-    { id: 0, gates: [{ type: "|0>" }] }, // q[0] id is qubit number, q[0], q[2]...
-  ]);
+const Circuit = ({ setSimulationResult, circuit, setCircuit }) => {
+
+  // const [circuit, setCircuit] = useState([
+  //   { id: 0, gates: [{ type: "|0>" }] }, // q[0] id is qubit number, q[0], q[2]...
+  // ]);
 
   const handleDropGate = (qubitId, gate) => {
-    setCircuit((prev) =>
-      prev.map((q) =>
+    setCircuit((prev) => {
+      const updated = prev.map((q) =>
         q.id === qubitId ? { ...q, gates: [...q.gates, gate] } : q
-      )
-    );
+      );
+      sendCircuitToBackend(updated); // ✅ 이제 정상 작동
+      return updated;
+    });
   };
 
   const addQubit = () => {
-    setCircuit((prev) => [
-      ...prev,
-      { id: prev.length, gates: [{ type: "|0>" }] },
-    ]);
+    setCircuit((prev) => {
+      const updated = [...prev, { id: prev.length, gates: [{ type: "|0>" }] }];
+      sendCircuitToBackend(updated); // 🔥 업데이트된 회로로 시뮬레이션 실행
+      return updated;
+    });
   };
+
+  useEffect(() => {
+    if (circuit.length > 0) {
+      sendCircuitToBackend(circuit);
+    }
+  }, [circuit]);
 
   // =====================
 
-  const [gates, setGates] = useState([]); // 👈 This state saves the putted Gates ex:  [ { type: 'H' }, { type: 'X' } ]
+  // const [simulationResult, setSimulationResult] = useState(null); // Initiate simulationResult as Null
 
-  const [{ isOver }, dropRef] = useDrop({
-    accept: "GATE",
-    drop: (item) => {
-      // 👈 This function is called when a gate is dropped
-      setGates((prev) => [...prev, item]); // 👈 드롭된 게이트 추가
-    },
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-    }),
-  });
-
-  const [qubitCount, setQubitCount] = useState(1);
-
-  const handleAddQubit = async () => {
-    const newCount = qubitCount + 1;
-    setQubitCount(newCount);
-
-    // Update the qubits state to reflect the new count
-    await axios.post("/api/init-circuit", { qubits: newCount });
-  };
-
-  const handleRemoveQubit = () => {
-    if (qubits.length > 1) {
-      setQubits(qubits.slice(0, -1)); // Remove last qubit
-    }
-  };
-
-  const handleSimulate = async () => {
+  const sendCircuitToBackend = async (updatedCircuit) => {
+    // backend로 보내서 결과 가지고 오는 함수
     try {
-      const response = await axios.post("http://localhost:5000/simulate", {
-        qubits,
+      const response = await fetch("http://localhost:5050/simulate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ circuit : updatedCircuit }), // Send Circuit Status
       });
-      console.log(response.data);
+      console.log("🚀 Circuit Sent to Backend:", circuit);
+      const data = await response.json();
+      console.log("🧪 Backend Response:", data);
+      setSimulationResult(data); // Save to show later
     } catch (error) {
-      console.error("Error during simulation:", error);
+      console.error("❌ Simulation Fail:", error);
     }
   };
 
-  const handleReset = () => {
-    setQubits([0]); // Reset to initial state
-  };
+  // const sendCircuitToBackend = async (updatedCircuit) => {
+  //   const response = await fetch("http://localhost:5050/simulate", {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ circuit: updatedCircuit }),
+  //   });
+  //   const data = await response.json();
+  //   setSimulationResult(data);  // ✅ App으로 올림
+  // };
 
   return (
     <>
@@ -124,4 +119,6 @@ export default function Circuit() {
       </div>
     </>
   );
-}
+};
+
+export default Circuit;

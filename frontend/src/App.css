@@ -81,6 +81,10 @@
   background-color: var(--color--black5);
 }
 
+.border-color-white {
+  border-color: var(--color--white);
+}
+
 .border-color-black2 {
   border-color: var(--color--black2);
 }

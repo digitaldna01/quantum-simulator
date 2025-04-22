@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 import "./App.css";
 
 import Circuit from "./components/Circuit";
 import Components from "./components/Components";
+import Probability from "./components/Probability";
+import Output from "./components/Output";
 
 function App() {
-  const [result, setResult] = useState(null);
+  const [simulationResult, setSimulationResult] = useState(null);
+  const [circuit, setCircuit] = useState([{ id: 0, gates: [{ type: "|0>" }] }]);
 
   return (
     <>
@@ -19,17 +22,23 @@ function App() {
           {/* Circuits and Component */}
           <div className="flex w-full max-h-[400px] border rounded-md ">
             <DndProvider backend={HTML5Backend}>
-              <Circuit />
-              <Components/>
+              <Circuit
+                setCircuit={setCircuit}
+                circuit={circuit}
+                setSimulationResult={setSimulationResult}
+              />
+              <Components />
             </DndProvider>
           </div>
           {/* Top Circuit Area */}
-          
 
           {/* Bottom Result Area */}
           <div className="grid grid-cols-4 gap-4 ">
-            <div className="col-span-2 p-4 border rounded-lg title">STATEVECTOR</div>
-            <div className="col-span-1 p-4 border rounded-lg title">OUTPUT</div>
+            <Probability 
+            top_states={simulationResult?.top_states}
+            numQubits={circuit.length}/>
+            <Output
+            statevector={simulationResult?.statevector} />
             <div className="col-span-1 p-4 border rounded-lg title">SPHERE</div>
           </div>
         </div>
