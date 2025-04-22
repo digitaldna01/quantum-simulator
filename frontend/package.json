@@ -10,15 +10,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-three/drei": "^10.0.6",
+    "@react-three/fiber": "^9.1.2",
     "axios": "^1.8.4",
     "katex": "^0.16.22",
+    "lucide-react": "^0.503.0",
+    "mathjs": "^14.4.0",
     "prop-types": "^15.8.1",
     "react": "^19.0.0",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.0.0",
     "react-katex": "^3.0.1",
-    "recharts": "^2.15.3"
+    "recharts": "^2.15.3",
+    "three": "^0.175.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

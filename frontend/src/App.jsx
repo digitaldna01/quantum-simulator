@@ -9,6 +9,7 @@ import Circuit from "./components/Circuit";
 import Components from "./components/Components";
 import Probability from "./components/Probability";
 import Output from "./components/Output";
+import Sphere from "./components/Sphere"; 
 
 function App() {
   const [simulationResult, setSimulationResult] = useState(null);
@@ -39,7 +40,7 @@ function App() {
             numQubits={circuit.length}/>
             <Output
             statevector={simulationResult?.statevector} />
-            <div className="col-span-1 p-4 border rounded-lg title">SPHERE</div>
+            <Sphere statevector={simulationResult?.statevector} />
           </div>
         </div>
       </div>
