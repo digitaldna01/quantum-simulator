@@ -9,7 +9,7 @@ import Circuit from "./components/Circuit";
 import Components from "./components/Components";
 import Probability from "./components/Probability";
 import Output from "./components/Output";
-import Sphere from "./components/Sphere"; 
+import Sphere from "./components/Sphere";
 
 function App() {
   const [simulationResult, setSimulationResult] = useState(null);
@@ -35,12 +35,15 @@ function App() {
 
           {/* Bottom Result Area */}
           <div className="grid grid-cols-4 gap-4 ">
-            <Probability 
-            top_states={simulationResult?.top_states}
-            numQubits={circuit.length}/>
-            <Output
-            statevector={simulationResult?.statevector} />
-            <Sphere statevector={simulationResult?.statevector} />
+            <Probability
+              top_states={simulationResult?.top_states}
+              numQubits={circuit.length}
+            />
+            <Output statevector={simulationResult?.statevector} />
+            <Sphere
+              statevector={simulationResult?.statevector}
+              numQubits={circuit.length}
+            />
           </div>
         </div>
       </div>

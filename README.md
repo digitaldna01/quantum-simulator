@@ -8,7 +8,7 @@ Google's tensor network represents complex, high-dimensional tensors as a networ
 ### Quantum Simulator
 The unique feature of a tensor network is that it can represent quantum simulator circuits directly. For example, when applying Hadamard, X, or Y gates to the first qubit, the gate nodes will have input and output legs. The input leg is connected to the qubit where you want to apply the gate, and the leg coming out after the gate represents the result after the qubit has been computed.
 
-![Alt text](/img/Tensornetwork.png "Tensor Network")
+![Tensor Network Visualization](./img/Tensornetwork.png "Tensor Network")
 
 To implement a Tensor Network Quantum Simulator, it's worthwhile to be familiar with the Qiskit circuit simulator and the fundamental concepts of a state vector quantum simulator. In addition to the Tensor Network Quantum Simulator, I also implemented the Grover algorithm using Qiskit and the State Vector simulator. For the State Vector simulator, I utilized basic NumPy functions to compute the Kronecker product and inner product of state vectors.
 

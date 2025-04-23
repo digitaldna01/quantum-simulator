@@ -13,10 +13,21 @@ S = np.array([[1, 0], [0, 1j]], dtype=complex)
 T = np.array([[1, 0], [0, np.exp(1j * np.pi / 4)]], dtype=complex)
 
 class TensorNetworkCircuit(object):
+    """ Tensor Network Quantum Circuit
+
+    Args:
+        object (_type_): Class
+    """
     def __init__(self, num_qubits):
+        """ Initialize Tensor Network Circuit
+
+        Args:
+            num_qubits (int): Number of Circuit Qubits
+
+        """
         self.num_qubits = num_qubits
         self.state_nodes = []
-        with tn.NodeCollection(self.state_nodes):
+        with tn.NodeCollection(self.state_nodes): # Initialize all qubits to  |0⟩ state
             state = [tn.Node(np.array([1.0 + 0.0j, 0.0 + 0.0j], dtype=complex)) for _ in range(num_qubits)]
             self.qubits = [node[0] for node in state]
         self.result = None
