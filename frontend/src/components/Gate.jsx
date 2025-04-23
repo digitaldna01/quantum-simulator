@@ -5,7 +5,13 @@ import { useDrag } from "react-dnd"; //react-dnd의 훅, 이 요소를 드래그
 import "./Gate.css";
 import "../App.css";
 
-const Gate = ({ type, label }) => {
+const Gate = ({ type, label, onCircuit = false, onRemove }) => {
+
+  const handleClick = () => {
+    if (onCircuit && onRemove && type !== "|0>") {
+      onRemove();
+    }
+  };
   const multiGates = {
     CZ: ["C", "Z"],
     MX: ["M", "X"],
@@ -17,7 +23,7 @@ const Gate = ({ type, label }) => {
 
   const [{ isDragging }, dragRef] = useDrag({
     type: "GATE", // 나증에 drag영역에서 이 타입을 받아들이게 함
-    item: { type }, // Payload when dragging  
+    item: { type }, // Payload when dragging
     collect: (monitor) => ({
       // 드래그 상태 추적용 -> isDragging값으로 스타일 조절
       isDragging: monitor.isDragging(),
@@ -35,8 +41,8 @@ const Gate = ({ type, label }) => {
     }
   };
 
-  // Reset Timer when start Dragging 
-  useEffect(() => { 
+  // Reset Timer when start Dragging
+  useEffect(() => {
     if (isDragging) {
       clearTimeout(hoverTimer.current); // Clear the timer when dragging starts
       setShowInfo(false);
@@ -131,6 +137,7 @@ const Gate = ({ type, label }) => {
   return (
     <div
       ref={dragRef} // setting the ref to the dragRef
+      onClick={handleClick} 
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       className={`all-gate  text-black text-center cursor-pointer  ${

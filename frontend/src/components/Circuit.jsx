@@ -6,7 +6,7 @@ import QubitLine from "./QubitLine";
 import "./Circuit.css";
 import "../App.css";
 
-const Circuit = ({ setSimulationResult, circuit, setCircuit }) => {
+const Circuit = ({ setSimulationResult, circuit, setCircuit, onRemoveQubit }) => {
 
   // const [circuit, setCircuit] = useState([
   //   { id: 0, gates: [{ type: "|0>" }] }, // q[0] id is qubit number, q[0], q[2]...
@@ -28,6 +28,16 @@ const Circuit = ({ setSimulationResult, circuit, setCircuit }) => {
       sendCircuitToBackend(updated); // 🔥 업데이트된 회로로 시뮬레이션 실행
       return updated;
     });
+  };
+
+  const handleRemoveGate = (qubitId, gateIndex) => {
+    setCircuit(prev =>
+      prev.map(q =>
+        q.id === qubitId
+          ? { ...q, gates: q.gates.filter((_, idx) => idx !== gateIndex) }
+          : q
+      )
+    );
   };
 
   useEffect(() => {
@@ -88,6 +98,8 @@ const Circuit = ({ setSimulationResult, circuit, setCircuit }) => {
                   qubitId={q.id}
                   gates={q.gates}
                   onDropGate={handleDropGate}
+                  onRemoveQubit={onRemoveQubit}
+                  onRemoveGate={handleRemoveGate}
                 />
               );
             })}

@@ -15,6 +15,11 @@ function App() {
   const [simulationResult, setSimulationResult] = useState(null);
   const [circuit, setCircuit] = useState([{ id: 0, gates: [{ type: "|0>" }] }]);
 
+  const handleRemoveQubit = (id) => {
+    if (id === 0) return; // 첫 번째 큐비트는 삭제 못함
+    setCircuit((prev) => prev.filter((q) => q.id !== id));
+  };
+
   return (
     <>
       <div className="w-screen h-screen flex justify-center items-center">
@@ -27,6 +32,7 @@ function App() {
                 setCircuit={setCircuit}
                 circuit={circuit}
                 setSimulationResult={setSimulationResult}
+                onRemoveQubit={handleRemoveQubit}
               />
               <Components />
             </DndProvider>
