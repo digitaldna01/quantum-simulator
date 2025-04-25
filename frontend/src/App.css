@@ -172,3 +172,37 @@
   font-family: var(--font--family);
   font-size: var(--font--tit--xs);
 }
+
+.introjs-tooltip {
+  background-color: #1f2937; /* slate-800 */
+  color: #f8fafc;            /* slate-50 */
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+
+  width: auto;
+
+  font-family: "Titillium Web", sans-serif !important;
+}
+
+.introjs-button {
+  background-color: #0169A6 !important; /* blue-500 */
+  color: white !important;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 400;
+}
+
+.introjs-skipbutton {
+  color: #FF4B00 !important; /* slate-400 */
+}
+
+.introjs-progressbar {
+  background-color: #FF4B00 !important; /* yellow-400 */
+}
+
+/* App.css 또는 custom css에 다음 추가 */
+.introjs-button {
+  text-shadow: none !important;
+  font-weight: 500 !important;
+}

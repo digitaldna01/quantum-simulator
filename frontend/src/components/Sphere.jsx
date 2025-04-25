@@ -8,14 +8,14 @@ import { OrbitControls, Text } from "@react-three/drei";
 import { parseStatevectorForQSphere } from "../utils/parseStatevectorForQSphere";
 import * as THREE from "three";
 
-const Sphere = ({ statevector, numQubits }) => {
+const Sphere = ({ statevector, numQubits}) => {
   const vectors = parseStatevectorForQSphere(statevector, numQubits);
 
   return (
     <>
-      <div className="col-span-1 p-4 border rounded-lg">
+      <div className="col-span-1 p-4 border rounded-lg" id="dashboard-sphere">
         <div className="title">SPHERE</div>
-        <div className="h-5/6 ">
+        <div className="h-5/6 cursor-move">
           <Canvas camera={{ position: [1.5, 1.5, 1.5], fov: 50 }}>
             <ambientLight intensity={1.2} />
             <pointLight position={[5, 5, 5]} intensity={2} />

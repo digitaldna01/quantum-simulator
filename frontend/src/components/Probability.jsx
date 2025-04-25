@@ -16,7 +16,7 @@ const Probability = ({ top_states, numQubits }) => {
 
   return (
     <>
-      <div className="col-span-2 border rounded-lg title">
+      <div className="col-span-2 border rounded-lg title" id="dashboard-probability">
         <div className="title p-4">PROBABILITY</div>
         <div className="p-4">
           <Chart data={chartData} />

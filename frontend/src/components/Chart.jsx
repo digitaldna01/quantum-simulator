@@ -8,6 +8,8 @@ import {
   CartesianGrid,
 } from "recharts";
 
+import "../App.css";
+
 const Chart = ({ data }) => {
   return (
     <>

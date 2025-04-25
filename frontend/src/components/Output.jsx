@@ -14,7 +14,7 @@ const Output = ({ statevector }) => {
 
   return (
     <>
-      <div className="col-span-1 p-4 border rounded-lg relative">
+      <div className="col-span-1 p-4 border rounded-lg relative" id="dashboard-output">
         <div className="title">Output</div>
         {/* 복사 버튼 */}
         <button

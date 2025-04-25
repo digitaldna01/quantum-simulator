@@ -8,7 +8,7 @@ export default function Components() {
   return (
     <>
       {/* The Width of the circuit is 2/3 initially  */}
-      <div className="w-1/3  h-full p-4">
+      <div className="w-1/3  h-full p-4" id="dashboard-components">
         {" "}
         {/* h-full*/}
         <div className="title">OPERATION GATES</div>
@@ -45,3 +45,4 @@ export default function Components() {
     </>
   );
 }
+

@@ -12,7 +12,7 @@ const Gate = ({ type, label, onCircuit = false, onRemove }) => {
       onRemove();
     }
   };
-  
+
   const multiGates = {
     CZ: ["C", "Z"],
     CX: ["C", "X"],
@@ -183,9 +183,13 @@ const Gate = ({ type, label, onCircuit = false, onRemove }) => {
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`all-gate  text-black text-center cursor-pointer z-20  ${
+      className={`all-gate  text-black text-center c z-20 ${
+        onCircuit ? "cursor-no-drop" : "cursor-grab"
+      } ${
         isDragging ? "opacity-30" : "hover:brightness-110"
-      } ${type === "None" ? "pointer-events-none opacity-0" : ""}`} // Change opacity when dragging
+      } ${
+        type === "None" ? "pointer-events-none opacity-0" : ""
+      }`} // Change opacity when dragging
     >
       {isMultiGates ? (
         <div className="multi-gate-stack">
@@ -207,7 +211,9 @@ const Gate = ({ type, label, onCircuit = false, onRemove }) => {
           {targetGates[type]}
         </div>
       ) : isInvisibleGates ? (
-        <div className="multi-gate-single flex items-center justify-center">None</div>
+        <div className="multi-gate-single flex items-center justify-center">
+          None
+        </div>
       ) : (
         <div
           className={`${
