@@ -140,7 +140,7 @@ const Gate = ({ type, label, onCircuit = false, onRemove }) => {
       onClick={handleClick} 
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`all-gate  text-black text-center cursor-pointer  ${
+      className={`all-gate  text-black text-center cursor-pointer z-20  ${
         isDragging ? "opacity-30" : "hover:brightness-110"
       }`} // Change opacity when dragging
     >
