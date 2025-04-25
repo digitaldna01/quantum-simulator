@@ -17,6 +17,15 @@ CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 def serve_react():
     return send_from_directory(app.static_folder, "index.html")
 
+# 👉 assets와 JS 경로를 위한 fallback
+@app.route('/<path:path>')
+def static_proxy(path):
+    file_path = os.path.join(frontend_dir, path)
+    if os.path.exists(file_path):
+        return send_from_directory(frontend_dir, path)
+    else:
+        return send_from_directory(frontend_dir, 'index.html')
+
 @app.route('/simulate', methods=['POST', 'OPTIONS'])
 def simulate():
     if request.method == 'OPTIONS':
