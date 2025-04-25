@@ -4,14 +4,15 @@ services:
     env: python
     buildCommand: |
       cd frontend && npm install && npm run build
+      cd ../backend && pip install -r requirements.txt
     startCommand: gunicorn app:app
-    workingDir: backend 
     envVars:
       - key: PYTHON_VERSION
-        value: 3.10
+        value: 3.12
     buildFilter:
       paths:
         - frontend/**
         - backend/**
-        - requirements.txt
+        - render.yaml
     plan: free
+    rootDir: backend
