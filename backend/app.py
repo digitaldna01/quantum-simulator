@@ -7,8 +7,10 @@ sys.path.append(os.path.dirname(__file__))
 from simulator.tn_simulator import TensorNetworkCircuit
 from simulator.utils import apply_gate_from_json
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+frontend_build_path = os.path.join(current_dir, "../frontend/dist")
 
-app = Flask(__name__, static_folder="../frontend/dist", static_url_path="/")
+app = Flask(__name__, static_folder=frontend_build_path, static_url_path="/")
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 
 @app.route("/")
