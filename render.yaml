@@ -4,7 +4,8 @@ services:
     env: python
     buildCommand: |
       cd frontend && npm install && npm run build
-    startCommand: gunicorn backend.app:app
+    startCommand: gunicorn app:app
+    workingDir: backend 
     envVars:
       - key: PYTHON_VERSION
         value: 3.10
