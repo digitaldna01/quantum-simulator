@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: quantum-simulator-frontend
+    env: static
+    staticPublishPath: frontend/dist
+    buildCommand: cd frontend && npm install && npm run build
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  - type: web
+    name: quantum-simulator-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    plan: free
+    envVars:
+      - key: FLASK_ENV
+        value: production

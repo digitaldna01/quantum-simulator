@@ -1,10 +1,15 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from simulator.tn_simulator import TensorNetworkCircuit
 from simulator.utils import apply_gate_from_json
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../frontend/dist", static_url_path="/")
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
+
+@app.route("/")
+def serve_react():
+    return send_from_directory(app.static_folder, "index.html")
 
 @app.route('/simulate', methods=['POST', 'OPTIONS'])
 def simulate():
@@ -26,6 +31,12 @@ def simulate():
         "statevector" : qc.state_to_qubits(),
         "top_states" : qc.top_possible_qubit_states()
     })
+
+
+@app.errorhandler(404)
+def not_found(e):
+    # React SPA에서 라우팅되도록 index.html로 fallback
+    return send_from_directory(app.static_folder, "index.html")
 
 if __name__ == '__main__':
     app.run(port=5050, debug=True)
