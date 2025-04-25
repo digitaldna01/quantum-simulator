@@ -1,8 +1,12 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+import sys
+import os
+sys.path.append(os.path.dirname(__file__)) 
+
 from simulator.tn_simulator import TensorNetworkCircuit
 from simulator.utils import apply_gate_from_json
-import os
+
 
 app = Flask(__name__, static_folder="../frontend/dist", static_url_path="/")
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
