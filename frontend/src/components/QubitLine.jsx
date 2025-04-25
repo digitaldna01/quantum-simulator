@@ -4,14 +4,20 @@ import "./QubitLine.css";
 import "../App.css";
 import { useState } from "react";
 
-const QubitLine = ({ qubitId, gates, onDropGate, onRemoveQubit, onRemoveGate }) => {
+const QubitLine = ({
+  qubitId,
+  gates,
+  onDropGate,
+  onRemoveQubit,
+  onRemoveGate,
+}) => {
   const [showModal, setShowModal] = useState(false);
 
   const [{ isOver }, dropRef] = useDrop({
     accept: "GATE",
     drop: (item) => {
       onDropGate(qubitId, item),
-        console.log("Dropped Gate:", item.type, "on Qubit:", qubitId);
+      console.log("Dropped Gate:", item.type, "on Qubit:", qubitId);
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
@@ -20,6 +26,7 @@ const QubitLine = ({ qubitId, gates, onDropGate, onRemoveQubit, onRemoveGate }) 
 
   return (
     <div className="flex items-center p-4">
+      {/* Qubit label */}
       <span
         className="text-white w-[60px] label cursor-pointer hover:text-orange-500 transition"
         onClick={() => {
@@ -28,6 +35,8 @@ const QubitLine = ({ qubitId, gates, onDropGate, onRemoveQubit, onRemoveGate }) 
       >
         Q[{qubitId}]
       </span>
+
+      {/* Drop Area */}
       <div
         ref={dropRef}
         className={`relative flex flex-row gap-6 grow min-h-[48px] py-4 transition-all ${
@@ -37,17 +46,19 @@ const QubitLine = ({ qubitId, gates, onDropGate, onRemoveQubit, onRemoveGate }) 
         {/* 회로선 (가로줄) */}
         <div className="absolute top-1/2 left-0 w-full border-color-black4 border-t z-0"></div>
 
-        {gates.map((gate, idx) => (
-          <div key={idx}>
-            {/* Gate Line (세로줄) */}
-            <Gate
-              type={gate.type}
-              label={gate.type}
-              onCircuit={true}
-              onRemove={() => onRemoveGate(qubitId, idx)}
-            />
-          </div>
-        ))}
+        {/* 게이트 들 */}
+        {gates.map((gate, idx) =>
+
+            <div key={`${gate.type}-${idx}`} className="z-10">
+              {/* Gate Line (세로줄) */}
+              <Gate
+                type={gate.type}
+                label={gate.type}
+                onCircuit={true}
+                onRemove={() => onRemoveGate(qubitId, idx)}
+              />
+            </div>
+        )}
       </div>
 
       {showModal && (

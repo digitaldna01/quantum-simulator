@@ -5,21 +5,105 @@ import Gate from "./Gate.jsx";
 import QubitLine from "./QubitLine";
 import "./Circuit.css";
 import "../App.css";
+import { v4 as uuidv4 } from "uuid";
 
-const Circuit = ({ setSimulationResult, circuit, setCircuit, onRemoveQubit }) => {
-
-  // const [circuit, setCircuit] = useState([
-  //   { id: 0, gates: [{ type: "|0>" }] }, // q[0] id is qubit number, q[0], q[2]...
-  // ]);
-
+const Circuit = ({
+  setSimulationResult,
+  circuit,
+  setCircuit,
+  onRemoveQubit,
+}) => {
   const handleDropGate = (qubitId, gate) => {
-    setCircuit((prev) => {
-      const updated = prev.map((q) =>
-        q.id === qubitId ? { ...q, gates: [...q.gates, gate] } : q
-      );
-      sendCircuitToBackend(updated); // ✅ 이제 정상 작동
-      return updated;
-    });
+    // gate type for
+    const isMultiGate = ["CZ", "CX", "CCX", "CCZ", "MCX", "MCZ"].includes(
+      gate.type
+    );
+
+    if (!isMultiGate) {
+      setCircuit((prev) => {
+        const updated = prev.map((q) =>
+          q.id === qubitId ? { ...q, gates: [...q.gates, gate] } : q
+        );
+        sendCircuitToBackend(updated); // ✅ 이제 정상 작동
+        return updated;
+      });
+    } else {
+      // 2️⃣ 멀티게이트 처리
+      const requiredQubits =
+        gate.type === "CCZ" ||
+        gate.type === "MCX" ||
+        gate.type === "CCX" ||
+        gate.type === "MCZ"
+          ? 3
+          : 2;
+      if (circuit.length < requiredQubits) {
+        alert(`⚠️ ${gate.type} requires at least ${requiredQubits} qubits.`);
+        return;
+      }
+
+      // Create id number first
+      const gateId = uuidv4();
+
+      // 컨트롤과 타겟 결정
+      const controlCount =
+        gate.type === "CCZ" ||
+        gate.type === "MCX" ||
+        gate.type === "CCX" ||
+        gate.type === "MCZ"
+          ? 2
+          : 1;
+      const controlIds = [...Array(controlCount)].map((_, i) => qubitId + i);
+      const targetId = qubitId + controlCount;
+
+      if (targetId >= circuit.length) {
+        alert("⚠️ Not enough qubits for multigate placement.");
+        return;
+      }
+
+      setCircuit((prev) => {
+        const allQubits = [...controlIds, targetId];
+
+        // 현재 각 큐비트에 있는 게이트 수
+        const maxLength = Math.max(
+          ...allQubits.map((i) => prev[i].gates.length)
+        );
+
+        // 업데이트된 회로
+        const updated = prev.map((q, i) => {
+          let padded = [...q.gates];
+          while (padded.length < maxLength) {
+            padded.push({ type: "None", linkedGateId: gateId });
+          }
+
+          if (controlIds.includes(i)) {
+            let controlType = "C";
+            if (gate.type === "MCX" || gate.type === "MCZ") {
+              const controlIndex = controlIds.indexOf(i);
+              controlType = controlIndex === 0 ? "M" : "C";
+            }
+            // const controlType = gate.type.startsWith("M") ? "M" : "C";
+            padded.push({
+              type: `Control_${controlType}`,
+              linkedGateId: gateId,
+            });
+          } else if (i === targetId) {
+            const targetType = gate.type.slice(-1); // 'Z' or 'X'
+            padded.push({
+              type: `Target_${targetType}`,
+              linkedGateId: gateId,
+              backendType: gate.type,
+              controls: controlIds,
+              target: targetId,
+            });
+          }
+
+          return { ...q, gates: padded };
+        });
+
+        sendCircuitToBackend(updated);
+        return updated;
+      });
+    }
   };
 
   const addQubit = () => {
@@ -31,13 +115,23 @@ const Circuit = ({ setSimulationResult, circuit, setCircuit, onRemoveQubit }) =>
   };
 
   const handleRemoveGate = (qubitId, gateIndex) => {
-    setCircuit(prev =>
-      prev.map(q =>
+    setCircuit((prev) => {
+      const gate = prev[qubitId].gates[gateIndex];
+
+      if (gate.linkedGateId) {
+        // ❌ 멀티게이트 삭제 시 연결된 부분 모두 제거
+        return prev.map((q) => ({
+          ...q,
+          gates: q.gates.filter((g) => g.linkedGateId !== gate.linkedGateId),
+        }));
+      }
+
+      return prev.map((q) =>
         q.id === qubitId
           ? { ...q, gates: q.gates.filter((_, idx) => idx !== gateIndex) }
           : q
-      )
-    );
+      );
+    });
   };
 
   useEffect(() => {
@@ -56,7 +150,7 @@ const Circuit = ({ setSimulationResult, circuit, setCircuit, onRemoveQubit }) =>
       const response = await fetch("http://localhost:5050/simulate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ circuit : updatedCircuit }), // Send Circuit Status
+        body: JSON.stringify({ circuit: updatedCircuit }), // Send Circuit Status
       });
       console.log("🚀 Circuit Sent to Backend:", circuit);
       const data = await response.json();
@@ -67,15 +161,7 @@ const Circuit = ({ setSimulationResult, circuit, setCircuit, onRemoveQubit }) =>
     }
   };
 
-  // const sendCircuitToBackend = async (updatedCircuit) => {
-  //   const response = await fetch("http://localhost:5050/simulate", {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({ circuit: updatedCircuit }),
-  //   });
-  //   const data = await response.json();
-  //   setSimulationResult(data);  // ✅ App으로 올림
-  // };
+  // =====================
 
   return (
     <>
@@ -117,15 +203,6 @@ const Circuit = ({ setSimulationResult, circuit, setCircuit, onRemoveQubit }) =>
                 </div>
               </div>
             )}
-            {/* {circuit.length > 1 && <RemoveButton />} */}
-            {/* <div
-              ref={dropRef}
-              className={`h-[300px] border rounded p-4 transition-all ${
-                isOver ? "bg-blue-100" : "bg-black"
-              }`}
-            > */}
-            {/* 여기에 회로 렌더링 */}
-            {/* </div> */}
           </div>
         </div>
       </div>

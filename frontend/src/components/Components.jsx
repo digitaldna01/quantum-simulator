@@ -28,14 +28,16 @@ export default function Components() {
             {" "}
             {/* h-full*/}
             {/* Left 2 gates */}
-            <div className="relative  w-1/2 flex gap-4 border-r pl-2">
+            <div className="relative w-1/3 flex gap-4 border-r pl-2">
+              <Gate type="CX" label="CX" />
               <Gate type="CZ" label="CZ" />
-              <Gate type="MX" label="MX" />
             </div>
             {/* Right 3 gates */}
-            <div className="w-1/2 flex gap-4 pl-2">
+            <div className="w-2/3 flex gap-4 pl-2">
+              <Gate type="CCX" label="CCX" />
               <Gate type="CCZ" label="CCZ" />
               <Gate type="MCX" label="MCX" />
+              <Gate type="MCZ" label="MCZ" />
             </div>
           </div>
         </div>

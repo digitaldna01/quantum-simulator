@@ -23,7 +23,8 @@
     "react-dom": "^19.0.0",
     "react-katex": "^3.0.1",
     "recharts": "^2.15.3",
-    "three": "^0.175.0"
+    "three": "^0.175.0",
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

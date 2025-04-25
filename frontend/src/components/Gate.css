@@ -16,7 +16,11 @@
   height: 36px;
 }
 
-
+.multi-gate-single {
+  background-color: var(--color--black4);
+  width: 36px;
+  height: 36px;
+}
 .single-gate {
   background-color: var(--color--secondary);
   width: 36px;
