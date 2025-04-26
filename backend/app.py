@@ -10,9 +10,6 @@ static_folder_path = os.path.abspath(static_folder_path)
 app = Flask(__name__, static_folder=static_folder_path, static_url_path="/")
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 
-@app.route("/")
-def serve_react():
-    return send_from_directory(app.static_folder, "index.html")
 
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
@@ -20,7 +17,7 @@ def serve_react(path):
     if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
         return send_from_directory(app.static_folder, path)
     else:
-        return send_from_directory(app.static_folder, 'index.html')
+        return send_from_directory(app.static_folder, "index.html")
     
     
 @app.route('/simulate', methods=['POST', 'OPTIONS'])
@@ -43,11 +40,6 @@ def simulate():
         "statevector" : qc.state_to_qubits(),
         "top_states" : qc.top_possible_qubit_states()
     })
-
-@app.errorhandler(404)
-def not_found(e):
-    # React SPA에서 라우팅되도록 index.html로 fallback
-    return send_from_directory(app.static_folder, "index.html")
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)), debug=True)
