@@ -147,7 +147,7 @@ const Circuit = ({
   const sendCircuitToBackend = async (updatedCircuit) => {
     // backend로 보내서 결과 가지고 오는 함수
     try {
-      const response = await fetch("http://localhost:5050/simulate", {
+      const response = await fetch("/simulate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ circuit: updatedCircuit }), // Send Circuit Status

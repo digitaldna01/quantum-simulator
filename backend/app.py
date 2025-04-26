@@ -14,6 +14,15 @@ CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 def serve_react():
     return send_from_directory(app.static_folder, "index.html")
 
+@app.route('/', defaults={'path': ''})
+@app.route('/<path:path>')
+def serve_react(path):
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
+    else:
+        return send_from_directory(app.static_folder, 'index.html')
+    
+    
 @app.route('/simulate', methods=['POST', 'OPTIONS'])
 def simulate():
     if request.method == 'OPTIONS':
@@ -28,8 +37,8 @@ def simulate():
     apply_gate_from_json(qc, circuit)
     qc.run()
     # print("Result is " , qc.result.tensor.flatten())
-    print("Statevector is " , qc.state_to_qubits())
-    print("Top states are " , qc.top_possible_qubit_states())
+    # print("Statevector is " , qc.state_to_qubits())
+    # print("Top states are " , qc.top_possible_qubit_states())
     return jsonify({
         "statevector" : qc.state_to_qubits(),
         "top_states" : qc.top_possible_qubit_states()
@@ -41,4 +50,4 @@ def not_found(e):
     return send_from_directory(app.static_folder, "index.html")
 
 if __name__ == '__main__':
-    app.run(port=5050, debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)), debug=True)
