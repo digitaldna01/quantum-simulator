@@ -1,30 +1,24 @@
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
-import sys
-import os
-sys.path.append(os.path.dirname(__file__)) 
-
 from simulator.tn_simulator import TensorNetworkCircuit
 from simulator.utils import apply_gate_from_json
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-frontend_build_path = os.path.join(current_dir, "../frontend/dist")
 
-app = Flask(__name__, static_folder=frontend_build_path, static_url_path="/")
+app = Flask(__name__)
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "*"}})
 
-@app.route("/")
-def serve_react():
-    return send_from_directory(app.static_folder, "index.html")
+# @app.route("/")
+# def serve_react():
+#     return send_from_directory(app.static_folder, "index.html")
 
 # 👉 assets와 JS 경로를 위한 fallback
-@app.route('/<path:path>')
-def static_proxy(path):
-    file_path = os.path.join(frontend_dir, path)
-    if os.path.exists(file_path):
-        return send_from_directory(frontend_dir, path)
-    else:
-        return send_from_directory(frontend_dir, 'index.html')
+# @app.route('/<path:path>')
+# def static_proxy(path):
+#     file_path = os.path.join(frontend_dir, path)
+#     if os.path.exists(file_path):
+#         return send_from_directory(frontend_dir, path)
+#     else:
+#         return send_from_directory(frontend_dir, 'index.html')
 
 @app.route('/simulate', methods=['POST', 'OPTIONS'])
 def simulate():
