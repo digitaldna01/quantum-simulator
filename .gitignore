@@ -222,6 +222,8 @@ pyrightconfig.json
 [Ss]cripts
 pyvenv.cfg
 pip-selfcheck.json
+!frontend/src/lib/
+!frontend/src/lib/**
 
 # image files
 initialized_circuit.png
