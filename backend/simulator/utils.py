@@ -1,34 +1,50 @@
-# simulator/utils.py
+"""Translate the JSON circuit payload from the frontend into method calls
+on a TensorNetworkCircuit instance.
+
+Frontend payload shape (per qubit):
+    {"id": int, "gates": [{"type": str, ...}, ...]}
+
+For multi-qubit gates the target gate carries the routing info
+(`backendType`, `controls`, `target`); the matching `Control_*` entries on
+other qubits are render-only and are ignored here.
+"""
+
+# Single-qubit gates: type -> circuit method name.
+SINGLE_GATES = {
+    "H": "h",
+    "X": "x",
+    "Y": "y",
+    "Z": "z",
+    "S": "s",
+    "T": "t",
+}
+
+# Multi-qubit gates keyed by (gate.type, gate.backendType).
+# Value is the circuit method name. Routing comes from gate["controls"]/["target"].
+MULTI_GATES = {
+    ("Target_X", "CX"): "cx",
+    ("Target_Z", "CZ"): "cz",
+    ("Target_X", "CCX"): "ccx",
+    ("Target_X", "MCX"): "ccx",   # frontend treats MCX/CCX the same when arity=2
+    ("Target_Z", "CCZ"): "ccz",
+    ("Target_Z", "MCZ"): "ccz",
+}
+
+
 def apply_gate_from_json(qc, circuit_json):
     for qubit in circuit_json:
         qid = qubit["id"]
         for gate in qubit["gates"]:
             gtype = gate["type"]
-            if gtype == "H":
-                qc.h([qid])
-            elif gtype == "X":
-                qc.x([qid])
-            elif gtype == "S":
-                qc.s([qid])
-            elif gtype == "T":
-                qc.t([qid])
-            elif gtype == "Y":
-                qc.y([qid])
-            elif gtype == "Z":
-                qc.z([qid])
-   
-            elif gtype == "Target_X" and gate["backendType"] == "CX":
-                qc.cx([gate["controls"][0]], gate["target"])
-                
-            elif gtype == "Target_Z" and gate["backendType"] == "CZ":
-                qc.cz([gate["controls"][0]], gate["target"])
 
-            elif gtype == "Target_X" and (gate["backendType"] == "CCX" or gate["backendType"] == "MCX"):
-                qc.ccx(gate["controls"], gate["target"])
-                
-            elif gtype == "Target_Z" and (gate["backendType"] == "CCZ" or gate["backendType"] == "MCZ"):
-                qc.ccz(gate["controls"], gate["target"])
-                
-            elif gtype == "MCX":
-                qc.mcx(gate["controls"], gate["target"])
-            
+            if gtype in SINGLE_GATES:
+                getattr(qc, SINGLE_GATES[gtype])([qid])
+                continue
+
+            method_name = MULTI_GATES.get((gtype, gate.get("backendType")))
+            if method_name is None:
+                # Control_* entries and padding ("None", "|0>") fall through silently;
+                # they are render-only on the frontend.
+                continue
+
+            getattr(qc, method_name)(gate["controls"], gate["target"])

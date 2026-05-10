@@ -1,43 +1,32 @@
-import "../App.css";
-import "./Output.css";
-import "./Sphere.css";
-
-import { Fragment } from "react";
+import { Fragment, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Text } from "@react-three/drei";
-import { parseStatevectorForQSphere } from "../utils/parseStatevectorForQSphere";
 import * as THREE from "three";
 
-const Sphere = ({ statevector, numQubits }) => {
-  const vectors = parseStatevectorForQSphere(statevector, numQubits);
-
-  return (
-    <>
-      <div className="col-span-1 p-4 border rounded-lg" id="dashboard-sphere">
-        <div className="title">SPHERE</div>
-        <div className="h-5/6 cursor-move">
-          <Canvas
-            key={JSON.stringify(statevector || [])}
-            camera={{ position: [1.5, 1.5, 1.5], fov: 50 }}
-          >
-            <ambientLight intensity={1.2} />
-            <pointLight position={[5, 5, 5]} intensity={2} />
-            <BlochSphere />
-            {vectors.map((vec, idx) => (
-              <Fragment key={idx}>
-                <QSpherePoint {...vec} />
-                <ConnectionLine {...vec} />
-              </Fragment>
-            ))}
-            <OrbitControls />
-          </Canvas>
-        </div>
-      </div>
-    </>
-  );
-};
-
-export default Sphere;
+// Convert parsed amplitudes [{state, re, im, prob}] into 3D Q-sphere markers.
+// Latitude evenly spaced by basis index (|0…0⟩ at the top, |1…1⟩ at the bottom),
+// azimuth from the complex phase.
+function toMarkers(amplitudes, numQubits) {
+  const total = 1 << numQubits;
+  return amplitudes
+    .map((a, idx) => {
+      if (a.prob < 0.001) return null;
+      const phase = Math.atan2(a.im, a.re);
+      const denom = total - 1 || 1;
+      const theta = Math.acos((2 * idx) / denom - 1);
+      const x = Math.sin(theta) * Math.cos(phase);
+      const y = Math.cos(theta);
+      const z = Math.sin(theta) * Math.sin(phase);
+      return {
+        idx,
+        label: `|${a.state}⟩`,
+        amplitude: Math.sqrt(a.prob),
+        probability: a.prob,
+        x, y, z,
+      };
+    })
+    .filter(Boolean);
+}
 
 function BlochSphere() {
   return (
@@ -48,19 +37,16 @@ function BlochSphere() {
   );
 }
 
-function QSpherePoint({ state, amplitude, probability, phase, x, y, z }) {
-  // const radius = 0.05 + probability * 0.2;
-  const radius = 0.08;
-  const color = new THREE.Color("#FF4B00");
-
+function QSpherePoint({ state, x, y, z }) {
+  const color = useMemo(() => new THREE.Color("#FF4B00"), []);
   return (
     <group>
       <mesh position={[x, y, z]}>
-        <sphereGeometry args={[radius, 16, 16]} />
+        <sphereGeometry args={[0.08, 16, 16]} />
         <meshStandardMaterial color={color} />
       </mesh>
       <Text
-        position={[x * 1.1, y * 1.1, z * 1.1]} // 점에서 살짝 떨어진 위치
+        position={[x * 1.1, y * 1.1, z * 1.1]}
         fontSize={0.08}
         color="#ffffff"
         anchorX="center"
@@ -72,7 +58,7 @@ function QSpherePoint({ state, amplitude, probability, phase, x, y, z }) {
   );
 }
 
-function ConnectionLine({ state, amplitude, probability, phase, x, y, z }) {
+function ConnectionLine({ x, y, z }) {
   return (
     <line>
       <bufferGeometry>
@@ -85,5 +71,43 @@ function ConnectionLine({ state, amplitude, probability, phase, x, y, z }) {
       </bufferGeometry>
       <lineBasicMaterial color="#FF4B00" linewidth={1} />
     </line>
+  );
+}
+
+export default function Sphere({ amplitudes, numQubits }) {
+  const markers = useMemo(
+    () => toMarkers(amplitudes, numQubits),
+    [amplitudes, numQubits]
+  );
+  // Force the canvas to remount when the active set changes; React-three
+  // caches scene objects otherwise and stale markers can stick around.
+  const canvasKey = markers.map((m) => m.idx).join(",");
+
+  return (
+    <div className="card" id="dashboard-sphere">
+      <div className="card-head">
+        <div className="title">Q-Sphere</div>
+        <div className="meta">
+          <span className="pill">{markers.length} active</span>
+        </div>
+      </div>
+      <div className="sphere-wrap">
+        <span className="sphere-axis">|0…0⟩ ↑ &nbsp; |1…1⟩ ↓</span>
+        <div style={{ width: "100%", height: "100%", cursor: "move" }}>
+          <Canvas key={canvasKey} camera={{ position: [1.5, 1.5, 1.5], fov: 50 }}>
+            <ambientLight intensity={1.2} />
+            <pointLight position={[5, 5, 5]} intensity={2} />
+            <BlochSphere />
+            {markers.map((m) => (
+              <Fragment key={m.idx}>
+                <QSpherePoint {...m} />
+                <ConnectionLine {...m} />
+              </Fragment>
+            ))}
+            <OrbitControls />
+          </Canvas>
+        </div>
+      </div>
+    </div>
   );
 }

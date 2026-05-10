@@ -1,43 +1,61 @@
-import "../App.css";
-import "./Output.css";
-import { useState } from "react";
-import { Copy } from "lucide-react";
+import { useMemo, useState } from "react";
 
-const Output = ({ statevector }) => {
+const fmt = (n) => n.toFixed(3);
+
+export default function Output({ amplitudes }) {
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(statevector);
+  const text = useMemo(
+    () =>
+      amplitudes
+        .filter((a) => a.prob >= 0.001)
+        .map((a) => `${fmt(a.re)}${a.im >= 0 ? "+" : ""}${fmt(a.im)}j * |${a.state}>`)
+        .join(" + "),
+    [amplitudes]
+  );
+
+  const onCopy = () => {
+    if (navigator.clipboard) navigator.clipboard.writeText(text);
     setCopied(true);
-    setTimeout(() => setCopied(false), 1500); // 1.5초 후 복사 메시지 제거
+    setTimeout(() => setCopied(false), 1500);
   };
 
   return (
-    <>
-      <div className="col-span-1 p-4 border rounded-lg relative" id="dashboard-output">
+    <div className="card" id="dashboard-output">
+      <div className="card-head">
         <div className="title">Output</div>
-        {/* 복사 버튼 */}
-        <button
-          onClick={handleCopy}
-          className="absolute top-2 right-2 hover:scale-110 transition-transform bg-transparent border-none shadow-none cursor-pointer focus:outline-none focus:ring-0 active:outline-none active:ring-0"
-          title="Copy to clipboard"
-        >
-          <Copy size={18} className="text-white" />
-        </button>
-
-        {/* 복사 확인 메시지 */}
-        {copied && (
-          <div className="absolute top-10 right-10 text-xs text-green-400 animate-pulse">
-            Copied!
-          </div>
-        )}
-
-        <div className="result h-5/6 rounded">
-          <div className="result-text">{statevector}</div>
+        <div className="meta">
+          <span className="pill">|ψ⟩</span>
         </div>
       </div>
-    </>
+      <div className="console">
+        {copied && <span className="copied">Copied</span>}
+        <button className="copy" title="Copy statevector" onClick={onCopy} type="button">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+          </svg>
+        </button>
+        {amplitudes.map((a) => (
+          <div className={"amp" + (a.prob < 0.001 ? " zero" : "")} key={a.state}>
+            <span className="real">{fmt(a.re)}</span>
+            <span className="op">{a.im >= 0 ? "+" : ""}</span>
+            {fmt(a.im)}
+            <span className="op">j</span>
+            <span className="op"> · </span>
+            <span className="ket">|{a.state}⟩</span>
+          </div>
+        ))}
+      </div>
+    </div>
   );
-};
-
-export default Output;
+}

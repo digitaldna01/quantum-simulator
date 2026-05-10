@@ -115,42 +115,37 @@ class TensorNetworkCircuit(object):
     
     ### 2-qubit Gates ###
     # Define the CNOT gate
+    # Note: build a fresh list instead of mutating the caller's `control_qubit`.
     def cx(self, control_qubit, target_qubit):
         with tn.NodeCollection(self.state_nodes):
             CX = self.controls_target_gate_generator(X, 1)
-            control_qubit.append(target_qubit)
-            self.apply_gate(CX, control_qubit)
-    
+            self.apply_gate(CX, [*control_qubit, target_qubit])
+
     # Define the CZ gate
     def cz(self, control_qubit, target_qubit):
         with tn.NodeCollection(self.state_nodes):
             CZ = self.controls_target_gate_generator(Z, 1)
-            control_qubit.append(target_qubit)
-            self.apply_gate(CZ, control_qubit)
-    
+            self.apply_gate(CZ, [*control_qubit, target_qubit])
+
     def ccx(self, control_qubits, target_qubit):
         with tn.NodeCollection(self.state_nodes):
             CCX = self.controls_target_gate_generator(X, 2)
-            control_qubits.append(target_qubit)
-            self.apply_gate(CCX, control_qubits)
-    
+            self.apply_gate(CCX, [*control_qubits, target_qubit])
+
     def ccz(self, control_qubits, target_qubit):
         with tn.NodeCollection(self.state_nodes):
             CCZ = self.controls_target_gate_generator(Z, 2)
-            control_qubits.append(target_qubit)
-            self.apply_gate(CCZ, control_qubits)
-            
+            self.apply_gate(CCZ, [*control_qubits, target_qubit])
+
     def mcx(self, control_qubits, target_qubit):
         with tn.NodeCollection(self.state_nodes):
             MCX = self.controls_target_gate_generator(X, len(control_qubits))
-            control_qubits.append(target_qubit)
-            self.apply_gate(MCX, control_qubits)
-    
+            self.apply_gate(MCX, [*control_qubits, target_qubit])
+
     def mcz(self, control_qubits, target_qubit):
         with tn.NodeCollection(self.state_nodes):
             MCZ = self.controls_target_gate_generator(Z, len(control_qubits))
-            control_qubits.append(target_qubit)
-            self.apply_gate(MCZ, control_qubits)
+            self.apply_gate(MCZ, [*control_qubits, target_qubit])
     
     # Define simulation run
     def run(self):

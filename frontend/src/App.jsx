@@ -1,147 +1,136 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
+import { useEffect, useMemo, useState } from "react";
 
-import introJs from "intro.js";
-import "intro.js/introjs.css";
+import "./styles/dashboard.css";
 
-import "./App.css";
-
+import TopBar from "./components/TopBar";
+import Banner from "./components/Banner";
 import Circuit from "./components/Circuit";
-import Components from "./components/Components";
+import OperationGates from "./components/OperationGates";
 import Probability from "./components/Probability";
 import Output from "./components/Output";
 import Sphere from "./components/Sphere";
+import ConfirmModal from "./components/ConfirmModal";
 
-function App() {
-  const [hasShownTour, setHasShownTour] = useState(false);
+import { useCircuit } from "./hooks/useCircuit";
+import { useSimulation } from "./hooks/useSimulation";
+import { useTour } from "./hooks/useTour";
+import { parseStatevector } from "./lib/parseStatevector";
 
-  useEffect(() => {
-    const seen = localStorage.getItem("seenTour");
+const REPO_URL = "https://github.com/digitaldna01/quantum-simulator";
 
-    // 처음 방문 시에만 자동 실행
-    if (!seen) {
-      startIntroTour();
-      localStorage.setItem("seenTour", "true");
-      setHasShownTour(true); // 이미 실행했음을 기록
-    }
-  }, []);
-
-  const handleRestartTour = () => {
-    startIntroTour();
-  };
-
-  const [simulationResult, setSimulationResult] = useState(null);
-  const [circuit, setCircuit] = useState([{ id: 0, gates: [{ type: "|0>" }] }]);
-
-  const handleRemoveQubit = (id) => {
-    if (id === 0) return; // 첫 번째 큐비트는 삭제 못함
-    setCircuit((prev) => prev.filter((q) => q.id !== id));
-  };
-
-  const startIntroTour = () => {
-    introJs()
-      .setOptions({
-        steps: [
-          {
-            intro:
-              "⚛️ Welcome to your Quantum Playground. Let's take a quick tour!",
-          },
-          {
-            element: "#dashboard-circuit",
-            intro:
-              "This is your circuit panel. Simply drag and drop gates to design quantum circuits.",
-          },
-          {
-            element: "#dashboard-components",
-            intro:
-              "Here are your available quantum gates. Click or drag them into your circuit above.",
-          },
-          {
-            element: "#dashboard-probability",
-            intro:
-              "This section shows the most probable quantum states after simulation.",
-          },
-          {
-            element: "#dashboard-output",
-            intro:
-              "Here's the complete statevector — a full description of your quantum system.",
-          },
-          {
-            element: "#dashboard-sphere",
-            intro:
-              "Visualize your quantum states on the Q-sphere for better geometric intuition.",
-          },
-        ],
-        nextLabel: "Continue →",
-        showProgress: true,
-        showBullets: true,
-        exitOnOverlayClick: true,
-        doneLabel: "Let's Start!",
-      })
-      .start();
-  };
-
-  useEffect(() => {
-    const seen = localStorage.getItem("seenTour");
-    if (!seen) {
-      startIntroTour();
-      localStorage.setItem("seenTour", "true");
-    }
-  }, []);
-
-  return (
+const BANNER_MESSAGES = {
+  empty: "Drop a gate from the right onto a qubit lane to begin.",
+  default: (
     <>
-      <div className="w-screen h-screen flex justify-center items-center">
-        <div className="grid gap-4 w-full max-w-6xl">
-          {/* TODO Get rid of height constraint */}
-          {/* Circuits and Component */}
-          <div
-            className="flex w-full max-h-[400px] border rounded-md "
-            id="dashboard-circuit"
-          >
-            <DndProvider backend={HTML5Backend}>
-              <Circuit
-                setCircuit={setCircuit}
-                circuit={circuit}
-                setSimulationResult={setSimulationResult}
-                onRemoveQubit={handleRemoveQubit}
-              />
-              <Components />
-            </DndProvider>
-          </div>
-          {/* Top Circuit Area */}
-
-          {/* Bottom Result Area */}
-          <div className="grid grid-cols-4 gap-4 ">
-            <Probability
-              top_states={simulationResult?.top_states}
-              numQubits={circuit.length}
-            />
-
-            <Output statevector={simulationResult?.statevector} />
-
-            <Sphere
-              statevector={simulationResult?.statevector}
-              numQubits={circuit.length}
-            />
-          </div>
-          <button
-            onClick={() => {
-              localStorage.removeItem("seenTour");
-              setTimeout(() => {
-                startIntroTour();
-              }, 100); // 살짝 delay로 localStorage 반영
-            }}
-            className="mt-4 px-4 py-2 rounded text-white"
-          >
-            Show Walkthrough Again
-          </button>
-        </div>
-      </div>
+      <strong>Circuit ready.</strong> Drag a gate from the right onto a qubit, or load a preset to explore.
     </>
+  ),
+};
+
+function countGates(circuit) {
+  return circuit.reduce(
+    (sum, q) =>
+      sum +
+      q.gates.filter((g) => g.type !== "|0>" && g.type !== "None").length,
+    0
   );
 }
 
-export default App;
+export default function App() {
+  const {
+    circuit,
+    addQubit,
+    removeQubit,
+    dropGate,
+    removeGate,
+    clear,
+    loadPreset,
+  } = useCircuit();
+  const { result, error, simulating, rerun } = useSimulation(circuit);
+  const { restart: restartTour } = useTour();
+
+  const [confirmId, setConfirmId] = useState(null);
+
+  const numQubits = circuit.length;
+  const gateCount = countGates(circuit);
+  const basisDim = 1 << numQubits;
+
+  const amplitudes = useMemo(
+    () => parseStatevector(result?.statevector, numQubits),
+    [result, numQubits]
+  );
+
+  const activeStates = useMemo(
+    () => amplitudes.filter((a) => a.prob >= 0.001).length,
+    [amplitudes]
+  );
+
+  const bannerMessage = gateCount === 0 ? BANNER_MESSAGES.empty : BANNER_MESSAGES.default;
+  const [lastRunTime, setLastRunTime] = useState("");
+  useEffect(() => {
+    if (result) {
+      setLastRunTime(
+        new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      );
+    }
+  }, [result]);
+
+  const handleConfirmDelete = () => {
+    if (confirmId !== null) removeQubit(confirmId);
+    setConfirmId(null);
+  };
+
+  return (
+    <div className={"app" + (simulating ? " simulating" : "")}>
+      <TopBar
+        numQubits={numQubits}
+        gateCount={gateCount}
+        basisDim={basisDim}
+        activeStates={activeStates}
+        onReset={clear}
+        onRun={rerun}
+        onTour={restartTour}
+      />
+
+      <Banner message={bannerMessage} onLoadPreset={loadPreset} />
+
+      <div className="top-grid">
+        <Circuit
+          circuit={circuit}
+          gateCount={gateCount}
+          onAddQubit={addQubit}
+          onClickQubit={(id) => setConfirmId(id)}
+          onDropGate={dropGate}
+          onRemoveGate={removeGate}
+          onClear={clear}
+        />
+        <OperationGates />
+      </div>
+
+      <div className="bottom-grid">
+        <Probability amplitudes={amplitudes} numQubits={numQubits} />
+        <Output amplitudes={amplitudes} />
+        <Sphere amplitudes={amplitudes} numQubits={numQubits} />
+      </div>
+
+      <div className="foot">
+        <div>
+          {error
+            ? `ERROR · ${error.message}`
+            : `READY · backend: tensornetwork · last run ${lastRunTime}`}
+        </div>
+        <div className="links">
+          <a href={REPO_URL} target="_blank" rel="noopener noreferrer">docs</a>
+        </div>
+      </div>
+
+      {confirmId !== null && (
+        <ConfirmModal
+          qubitId={confirmId}
+          onCancel={() => setConfirmId(null)}
+          onConfirm={handleConfirmDelete}
+        />
+      )}
+    </div>
+  );
+}

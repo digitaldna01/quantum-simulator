@@ -231,3 +231,4 @@ histogram.png
 
 # End of https://www.toptal.com/developers/gitignore/api/python,julia,jupyternotebooks
 
+.claude/

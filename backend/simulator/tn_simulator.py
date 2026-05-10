@@ -1,181 +1,149 @@
+"""Runtime tensor-network circuit used by the Flask backend.
+
+This file is intentionally a near-duplicate of
+``tensornetwork_simulator/tensornetwork_circuit.py``. The other copy is the
+educational artifact referenced by the project README; this copy is the
+runtime dependency of ``backend/app.py``. Keep the two in sync when the
+public surface (gate methods, ``run``, ``state_to_qubits``,
+``top_possible_qubit_states``) changes.
+"""
+
 import tensornetwork as tn
 import numpy as np
 
-# initiate Pauli logic gates
+# Pauli gates
 I = np.eye(2, dtype=complex)
 X = np.array([[0, 1], [1, 0]], dtype=complex)
 Y = np.array([[0, -1j], [1j, 0]], dtype=complex)
 Z = np.array([[1, 0], [0, -1]], dtype=complex)
 
-# initiate quantum gates
-H = np.array([[1, 1], [1, -1]], dtype=complex) / np.sqrt(2) 
+# Other single-qubit gates
+H = np.array([[1, 1], [1, -1]], dtype=complex) / np.sqrt(2)
 S = np.array([[1, 0], [0, 1j]], dtype=complex)
 T = np.array([[1, 0], [0, np.exp(1j * np.pi / 4)]], dtype=complex)
 
-class TensorNetworkCircuit(object):
-    """ Tensor Network Quantum Circuit
 
-    Args:
-        object (_type_): Class
-    """
+class TensorNetworkCircuit:
     def __init__(self, num_qubits):
-        """ Initialize Tensor Network Circuit
-
-        Args:
-            num_qubits (int): Number of Circuit Qubits
-
-        """
         self.num_qubits = num_qubits
         self.state_nodes = []
-        with tn.NodeCollection(self.state_nodes): # Initialize all qubits to  |0⟩ state
-            state = [tn.Node(np.array([1.0 + 0.0j, 0.0 + 0.0j], dtype=complex)) for _ in range(num_qubits)]
+        with tn.NodeCollection(self.state_nodes):
+            state = [
+                tn.Node(np.array([1.0 + 0.0j, 0.0 + 0.0j], dtype=complex))
+                for _ in range(num_qubits)
+            ]
             self.qubits = [node[0] for node in state]
         self.result = None
 
-    # Define apply gate function
-    # apply_qubit parameter is the list of qubit index that the gate will be applied to
     def apply_gate(self, gate, apply_qubit):
         gate_node = tn.Node(gate)
         for index_of_gate, qubit in enumerate(apply_qubit):
             tn.connect(self.qubits[qubit], gate_node[index_of_gate])
             self.qubits[qubit] = gate_node[index_of_gate + len(apply_qubit)]
-    
-    # Define the multi-controlled gate
+
     def controls_target_gate_generator(self, gate, num_control_qubits):
-        # Define projectors |0><0| and |1><1|
-        P0 = np.array([[1, 0], [0, 0]])  # Projector for |0>
-        P1 = np.array([[0, 0], [0, 1]])  # Projector for |1>
-        
-        # define numer of cases
+        P0 = np.array([[1, 0], [0, 0]])
+        P1 = np.array([[0, 0], [0, 1]])
+
         num_of_cases = 2 ** num_control_qubits
         total_qubits = num_control_qubits + 1
-        
-        matrix = np.zeros((2 ** (num_control_qubits + 1), 2 ** (num_control_qubits + 1)), dtype=complex)
+
+        matrix = np.zeros((2 ** total_qubits, 2 ** total_qubits), dtype=complex)
 
         for index in range(num_of_cases):
-            # local variable for each cases matrix
             term = np.eye(1)
             order = 0
-            # cases box
             control_state = [int(x) for x in format(index, f'0{num_control_qubits}b')]
-            for qubit in range(total_qubits):
-                if order < num_control_qubits :
-                    checker = control_state[order]
-                    if checker == 0:
-                        term = np.kron(term, P0)
-                    else:
-                        term = np.kron(term, P1)
+            for _ in range(total_qubits):
+                if order < num_control_qubits:
+                    term = np.kron(term, P0 if control_state[order] == 0 else P1)
                     order += 1
                 else:
-                    if index == num_of_cases - 1:
-                        term = np.kron(term, gate)
-                    else:
-                        term = np.kron(term, I) 
-            
+                    term = np.kron(term, gate if index == num_of_cases - 1 else I)
             matrix += term
-        
-        matrix = matrix.flatten()
-        reshaped = []
-        for i in range(num_control_qubits + 1):
-            for _ in range(2):
-                reshaped.append(2)
-        matrix = matrix.reshape(reshaped)
-        return matrix
 
-    # Define the X gate
+        reshaped = [2] * (2 * (num_control_qubits + 1))
+        return matrix.reshape(reshaped)
+
+    # --- Single-qubit gates ---
     def x(self, apply_qubit):
         with tn.NodeCollection(self.state_nodes):
             self.apply_gate(X, apply_qubit)
-    
-    # Define the Y gate
+
     def y(self, apply_qubit):
         with tn.NodeCollection(self.state_nodes):
             self.apply_gate(Y, apply_qubit)
-    
-    # Define the Z gate
+
     def z(self, apply_qubit):
         with tn.NodeCollection(self.state_nodes):
             self.apply_gate(Z, apply_qubit)
-    
-    ### Quantum Gates ###
-    # Define the hadarmard gate
+
     def h(self, apply_qubit):
         with tn.NodeCollection(self.state_nodes):
             self.apply_gate(H, apply_qubit)
-    
-    # Define the S gate
+
     def s(self, apply_qubit):
         with tn.NodeCollection(self.state_nodes):
             self.apply_gate(S, apply_qubit)
-    
-    # Define the T gate
+
     def t(self, apply_qubit):
         with tn.NodeCollection(self.state_nodes):
             self.apply_gate(T, apply_qubit)
-    
-    ### 2-qubit Gates ###
-    # Define the CNOT gate
+
+    # --- Multi-qubit gates ---
+    # Note: control lists are not mutated; we always build a fresh [*controls, target].
     def cx(self, control_qubit, target_qubit):
         with tn.NodeCollection(self.state_nodes):
             CX = self.controls_target_gate_generator(X, 1)
-            control_qubit.append(target_qubit)
-            self.apply_gate(CX, control_qubit)
-    
-    # Define the CZ gate
+            self.apply_gate(CX, [*control_qubit, target_qubit])
+
     def cz(self, control_qubit, target_qubit):
         with tn.NodeCollection(self.state_nodes):
             CZ = self.controls_target_gate_generator(Z, 1)
-            control_qubit.append(target_qubit)
-            self.apply_gate(CZ, control_qubit)
-    
+            self.apply_gate(CZ, [*control_qubit, target_qubit])
+
     def ccx(self, control_qubits, target_qubit):
         with tn.NodeCollection(self.state_nodes):
             CCX = self.controls_target_gate_generator(X, 2)
-            control_qubits.append(target_qubit)
-            self.apply_gate(CCX, control_qubits)
-    
+            self.apply_gate(CCX, [*control_qubits, target_qubit])
+
     def ccz(self, control_qubits, target_qubit):
         with tn.NodeCollection(self.state_nodes):
             CCZ = self.controls_target_gate_generator(Z, 2)
-            control_qubits.append(target_qubit)
-            self.apply_gate(CCZ, control_qubits)
-            
+            self.apply_gate(CCZ, [*control_qubits, target_qubit])
+
     def mcx(self, control_qubits, target_qubit):
         with tn.NodeCollection(self.state_nodes):
             MCX = self.controls_target_gate_generator(X, len(control_qubits))
-            control_qubits.append(target_qubit)
-            self.apply_gate(MCX, control_qubits)
-    
+            self.apply_gate(MCX, [*control_qubits, target_qubit])
+
     def mcz(self, control_qubits, target_qubit):
         with tn.NodeCollection(self.state_nodes):
             MCZ = self.controls_target_gate_generator(Z, len(control_qubits))
-            control_qubits.append(target_qubit)
-            self.apply_gate(MCZ, control_qubits)
-    
-    # Define simulation run
+            self.apply_gate(MCZ, [*control_qubits, target_qubit])
+
     def run(self):
-        self.result = tn.contractors.greedy(self.state_nodes, output_edge_order=self.qubits)
-    
-    # Define the convert function of matrix state to qubits
+        self.result = tn.contractors.greedy(
+            self.state_nodes, output_edge_order=self.qubits
+        )
+
     def state_to_qubits(self):
         result_statevector = self.result.tensor.flatten()
         result = ""
-        for i in range(len(result_statevector)):
-            if result_statevector[i] != 0:
-                result += f'{result_statevector[i]:.3f} * |{i:0{self.num_qubits}b}> + '
+        for i, amp in enumerate(result_statevector):
+            if amp != 0:
+                result += f'{amp:.3f} * |{i:0{self.num_qubits}b}> + '
         return result[:-2]
-    
-    # Define the top possible qubit states
+
     def top_possible_qubit_states(self):
-        num_qubits = self.num_qubits
         max_prob = 0
         result = []
         result_statevector = self.result.tensor.flatten()
-        for i in range(len(result_statevector)):
-            if np.round(np.abs(result_statevector[i]), decimals=5) > max_prob:
-                max_prob = np.round(np.abs(result_statevector[i]), decimals=5)
-                result = []
-                result.append(f'|{i:0{num_qubits}b}>')
-            elif np.round(np.abs(result_statevector[i]), decimals=5) == max_prob:
-                result.append(f'|{i:0{num_qubits}b}>')
-        return result   
+        for i, amp in enumerate(result_statevector):
+            prob = np.round(np.abs(amp), decimals=5)
+            if prob > max_prob:
+                max_prob = prob
+                result = [f'|{i:0{self.num_qubits}b}>']
+            elif prob == max_prob:
+                result.append(f'|{i:0{self.num_qubits}b}>')
+        return result
