@@ -53,6 +53,7 @@ export default function Lane({
             />
           </div>
         ))}
+        <div className="cell cell-next" aria-hidden="true" />
       </div>
     </div>
   );

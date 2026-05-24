@@ -7,6 +7,10 @@ Frontend payload shape (per qubit):
 For multi-qubit gates the target gate carries the routing info
 (`backendType`, `controls`, `target`); the matching `Control_*` entries on
 other qubits are render-only and are ignored here.
+
+Gates are applied column-by-column (timestep order) across the lanes, not
+lane-by-lane: quantum gates do not commute, so a qubit's gates must be
+interleaved with the others in time order for the result to be correct.
 """
 
 # Single-qubit gates: type -> circuit method name.
@@ -32,13 +36,17 @@ MULTI_GATES = {
 
 
 def apply_gate_from_json(qc, circuit_json):
-    for qubit in circuit_json:
-        qid = qubit["id"]
-        for gate in qubit["gates"]:
+    max_len = max((len(qubit["gates"]) for qubit in circuit_json), default=0)
+    for col in range(max_len):
+        for qubit in circuit_json:
+            gates = qubit["gates"]
+            if col >= len(gates):
+                continue
+            gate = gates[col]
             gtype = gate["type"]
 
             if gtype in SINGLE_GATES:
-                getattr(qc, SINGLE_GATES[gtype])([qid])
+                getattr(qc, SINGLE_GATES[gtype])([qubit["id"]])
                 continue
 
             method_name = MULTI_GATES.get((gtype, gate.get("backendType")))

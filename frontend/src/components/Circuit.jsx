@@ -2,6 +2,13 @@ import Lane from "./Lane";
 
 const MAX_QUBITS = 3;
 
+const SUBSCRIPTS = "₀₁₂₃₄₅₆₇₈₉";
+const toSubscript = (n) =>
+  String(n)
+    .split("")
+    .map((d) => SUBSCRIPTS[+d])
+    .join("");
+
 export default function Circuit({
   circuit,
   gateCount,
@@ -11,6 +18,9 @@ export default function Circuit({
   onRemoveGate,
   onClear,
 }) {
+  // Timeline grows with the deepest lane (index 0 is the |0> init column).
+  const depth = Math.max(...circuit.map((q) => q.gates.length));
+
   return (
     <div className="card" id="dashboard-circuit">
       <div className="card-head">
@@ -26,38 +36,41 @@ export default function Circuit({
         </div>
       </div>
       <div className="circuit-body">
-        <div className="circuit-toolbar">
-          <span className="arrow">Time →</span>
-          <div className="timesteps">
-            <span className="active">t₀ init</span>
-            <span>t₁</span>
-            <span>t₂</span>
-            <span>t₃</span>
-            <span>t₄</span>
-          </div>
-        </div>
-        <div className="lanes">
-          {circuit.map((q, idx) => (
-            <Lane
-              key={q.id}
-              qubitId={q.id}
-              gates={q.gates}
-              isFirst={idx === 0}
-              onDropGate={onDropGate}
-              onClickQubit={onClickQubit}
-              onRemoveGate={onRemoveGate}
-            />
-          ))}
-          {circuit.length < MAX_QUBITS && (
-            <div className="add-lane">
-              <button onClick={onAddQubit} title="Add qubit" type="button">
-                ＋
-              </button>
-              <div className="ghostwire">
-                <span className="hint">+ Add qubit</span>
-              </div>
+        <div className="circuit-scroll">
+          <div className="circuit-toolbar">
+            <span className="arrow">Time →</span>
+            <div className="timesteps">
+              {Array.from({ length: depth }, (_, i) => (
+                <span key={i} className={i === 0 ? "active" : ""}>
+                  {i === 0 ? "t₀ init" : `t${toSubscript(i)}`}
+                </span>
+              ))}
+              <span className="ghost">＋</span>
             </div>
-          )}
+          </div>
+          <div className="lanes">
+            {circuit.map((q, idx) => (
+              <Lane
+                key={q.id}
+                qubitId={q.id}
+                gates={q.gates}
+                isFirst={idx === 0}
+                onDropGate={onDropGate}
+                onClickQubit={onClickQubit}
+                onRemoveGate={onRemoveGate}
+              />
+            ))}
+            {circuit.length < MAX_QUBITS && (
+              <div className="add-lane">
+                <button onClick={onAddQubit} title="Add qubit" type="button">
+                  ＋
+                </button>
+                <div className="ghostwire">
+                  <span className="hint">+ Add qubit</span>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>

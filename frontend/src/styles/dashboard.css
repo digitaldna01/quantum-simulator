@@ -161,15 +161,20 @@ body {
 
 /* Circuit */
 .circuit-body { padding: 6px 18px 18px; position: relative; }
+.circuit-scroll { overflow-x: auto; overflow-y: hidden; padding-bottom: 4px; }
 .circuit-toolbar {
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; gap: 14px;
   padding: 10px 0 6px; color: var(--qs-fg-3);
   font-family: "JetBrains Mono", monospace; font-size: 11px;
 }
 .circuit-toolbar .arrow {
   letter-spacing: 0.2em; text-transform: uppercase; font-size: 10px; color: var(--qs-fg-4);
+  flex: none;
 }
 .timesteps { display: flex; gap: 8px; }
+.timesteps .ghost {
+  color: var(--qs-fg-4); border-style: dashed; background: transparent;
+}
 .timesteps span {
   padding: 2px 8px; border-radius: 4px;
   background: rgba(255, 255, 255, 0.04);
@@ -181,11 +186,16 @@ body {
   background: rgba(255, 75, 0, 0.08);
 }
 
-.lanes { display: flex; flex-direction: column; gap: 4px; padding-top: 6px; }
+.lanes {
+  display: flex; flex-direction: column; gap: 4px; padding-top: 6px;
+  width: max-content; min-width: 100%;
+}
 .lane { display: flex; align-items: center; gap: 18px; height: 64px; position: relative; }
 .lane-label {
   width: 62px; flex: none;
   display: flex; flex-direction: column; line-height: 1.1;
+  position: sticky; left: 0; z-index: 2;
+  background: var(--qs-card); padding-right: 6px;
 }
 .lane-label .qid {
   font-family: "politica", "Titillium Web";
@@ -261,6 +271,10 @@ body {
 
 /* Gate primitives */
 .cell { position: relative; z-index: 1; }
+.cell-next {
+  width: 36px; height: 36px; flex: none; z-index: 0;
+  border: 1px dashed var(--qs-border); border-radius: 6px; opacity: 0.4;
+}
 .gate {
   width: 36px; height: 36px;
   display: inline-flex; align-items: center; justify-content: center;
